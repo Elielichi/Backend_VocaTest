@@ -1,0 +1,1326 @@
+{
+  "universidad": [
+    {
+      "id": 1,
+      "nombre": "Universidad de Lima",
+      "tipo": "Privada",
+      "ubicacion": "Av. Javier Prado Este 4600, Santiago de Surco, Lima",
+      "costoMatricula": "S/. 300",
+      "webOficial": "https://www.ulima.edu.pe/"
+    },
+    {
+      "id": 2,
+      "nombre": "Pontificia Universidad Católica del Perú",
+      "tipo": "Privada",
+      "ubicacion": "Av. Universitaria 1801, San Miguel, Lima",
+      "costoMatricula": "S/. 400",
+      "webOficial": "https://www.pucp.edu.pe/"
+    },
+    {
+      "id": 3,
+      "nombre": "Universidad Nacional Mayor de San Marcos",
+      "tipo": "Pública",
+      "ubicacion": "Ciudad Universitaria, Cercado de Lima",
+      "costoMatricula": "Gratuita",
+      "webOficial": "https://unmsm.edu.pe/"
+    },
+    {
+      "id": 4,
+      "nombre": "Universidad Nacional de Ingeniería",
+      "tipo": "Pública",
+      "ubicacion": "Av. Túpac Amaru 210, Rímac, Lima",
+      "costoMatricula": "Gratuita",
+      "webOficial": "https://www.uni.edu.pe/"
+    },
+    {
+      "id": 5,
+      "nombre": "Universidad Peruana de Ciencias Aplicadas",
+      "tipo": "Privada",
+      "ubicacion": "Av. Alonso de Molina 1611, Monterrico, Santiago de Surco",
+      "costoMatricula": "S/. 400",
+      "webOficial": "https://www.upc.edu.pe/"
+    },
+    {
+      "id": 6,
+      "nombre": "Universidad San Ignacio de Loyola",
+      "tipo": "Privada",
+      "ubicacion": "Av. La Fontana 550, La Molina, Lima",
+      "costoMatricula": "S/. 320",
+      "webOficial": "https://www.usil.edu.pe/"
+    },
+    {
+      "id": 7,
+      "nombre": "Universidad Ricardo Palma",
+      "tipo": "Privada",
+      "ubicacion": "Av. Benavides 5440, Santiago de Surco, Lima",
+      "costoMatricula": "S/. 250",
+      "webOficial": "https://www.urp.edu.pe/"
+    },
+    {
+      "id": 8,
+      "nombre": "Universidad Científica del Sur",
+      "tipo": "Privada",
+      "ubicacion": "Antigua Carretera Panamericana Sur km 19, Villa El Salvador, Lima",
+      "costoMatricula": "S/. 350",
+      "webOficial": "https://www.cientifica.edu.pe/"
+    },
+    {
+      "id": 9,
+      "nombre": "Universidad ESAN",
+      "tipo": "Privada",
+      "ubicacion": "Alonso de Molina 1652, Monterrico, Santiago de Surco",
+      "costoMatricula": "S/. 300",
+      "webOficial": "https://www.ue.edu.pe/"
+    },
+    {
+      "id": 10,
+      "nombre": "Universidad de San Martín de Porres",
+      "tipo": "Privada",
+      "ubicacion": "Av. Las Calandrias 151, Santa Anita, Lima",
+      "costoMatricula": "S/. 250",
+      "webOficial": "https://www.usmp.edu.pe/"
+    }
+  ],
+  "carreras": [
+    {
+      "id": 1,
+      "universidad_id": 1,
+      "nombre": "Ingeniería de Sistemas",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Forma ingenieros capaces de diseñar, implementar y gestionar sistemas de información.",
+      "planEstudios": "/mallas/ulima-sistemas.pdf"
+    },
+    {
+      "id": 2,
+      "universidad_id": 1,
+      "nombre": "Ingeniería Industrial",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Optimización de procesos productivos y gestión eficiente de recursos.",
+      "planEstudios": "/mallas/ulima-industrial.pdf"
+    },
+    {
+      "id": 3,
+      "universidad_id": 1,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 230,
+      "descripcion": "Diseño y planificación de espacios habitables con enfoque sostenible.",
+      "planEstudios": "/mallas/ulima-arquitectura.pdf"
+    },
+    {
+      "id": 4,
+      "universidad_id": 1,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Gestión estratégica de organizaciones públicas y privadas.",
+      "planEstudios": "/mallas/ulima-administracion.pdf"
+    },
+    {
+      "id": 5,
+      "universidad_id": 1,
+      "nombre": "Marketing",
+      "facultad": "Comunicación",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Estrategias de mercado, branding y comportamiento del consumidor.",
+      "planEstudios": "/mallas/ulima-marketing.pdf"
+    },
+    {
+      "id": 6,
+      "universidad_id": 1,
+      "nombre": "Economía",
+      "facultad": "Economía",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Análisis económico, políticas públicas y mercados financieros.",
+      "planEstudios": "/mallas/ulima-economia.pdf"
+    },
+    {
+      "id": 7,
+      "universidad_id": 1,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Formación jurídica integral con enfoque en derecho corporativo.",
+      "planEstudios": "/mallas/ulima-derecho.pdf"
+    },
+    {
+      "id": 8,
+      "universidad_id": 1,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Comprensión del comportamiento humano y salud mental.",
+      "planEstudios": "/mallas/ulima-psicologia.pdf"
+    },
+    {
+      "id": 9,
+      "universidad_id": 1,
+      "nombre": "Contabilidad",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Gestión financiera, auditoría y contabilidad empresarial.",
+      "planEstudios": "/mallas/ulima-contabilidad.pdf"
+    },
+    {
+      "id": 10,
+      "universidad_id": 1,
+      "nombre": "Comunicación",
+      "facultad": "Comunicación",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Comunicación estratégica, periodismo y medios digitales.",
+      "planEstudios": "/mallas/ulima-comunicacion.pdf"
+    },
+    {
+      "id": 11,
+      "universidad_id": 2,
+      "nombre": "Ingeniería Informática",
+      "facultad": "Ciencias e Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 218,
+      "descripcion": "Desarrollo de software, inteligencia artificial y sistemas computacionales.",
+      "planEstudios": "/mallas/pucp-informatica.pdf"
+    },
+    {
+      "id": 12,
+      "universidad_id": 2,
+      "nombre": "Ingeniería Civil",
+      "facultad": "Ciencias e Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 225,
+      "descripcion": "Diseño y construcción de infraestructura civil sostenible.",
+      "planEstudios": "/mallas/pucp-civil.pdf"
+    },
+    {
+      "id": 13,
+      "universidad_id": 2,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura y Urbanismo",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 230,
+      "descripcion": "Arquitectura con enfoque en diseño urbano y sostenibilidad.",
+      "planEstudios": "/mallas/pucp-arquitectura.pdf"
+    },
+    {
+      "id": 14,
+      "universidad_id": 2,
+      "nombre": "Economía",
+      "facultad": "Ciencias Sociales",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Economía aplicada, política económica y desarrollo social.",
+      "planEstudios": "/mallas/pucp-economia.pdf"
+    },
+    {
+      "id": 15,
+      "universidad_id": 2,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Psicología clínica, educativa y organizacional.",
+      "planEstudios": "/mallas/pucp-psicologia.pdf"
+    },
+    {
+      "id": 16,
+      "universidad_id": 2,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Derecho constitucional, civil y corporativo.",
+      "planEstudios": "/mallas/pucp-derecho.pdf"
+    },
+    {
+      "id": 17,
+      "universidad_id": 2,
+      "nombre": "Ingeniería Mecatrónica",
+      "facultad": "Ciencias e Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 222,
+      "descripcion": "Integración de sistemas mecánicos, electrónicos y de control.",
+      "planEstudios": "/mallas/pucp-mecatronica.pdf"
+    },
+    {
+      "id": 18,
+      "universidad_id": 2,
+      "nombre": "Diseño Gráfico",
+      "facultad": "Arte y Diseño",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 198,
+      "descripcion": "Diseño visual, identidad de marca y comunicación gráfica.",
+      "planEstudios": "/mallas/pucp-diseño.pdf"
+    },
+    {
+      "id": 19,
+      "universidad_id": 2,
+      "nombre": "Comunicación Audiovisual",
+      "facultad": "Ciencias y Artes de la Comunicación",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Producción audiovisual, cine y medios digitales.",
+      "planEstudios": "/mallas/pucp-comunicacion.pdf"
+    },
+    {
+      "id": 20,
+      "universidad_id": 2,
+      "nombre": "Gestión y Alta Dirección",
+      "facultad": "Gestión y Alta Dirección",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Gestión de organizaciones con enfoque estratégico y social.",
+      "planEstudios": "/mallas/pucp-administracion.jpg"
+    },
+    {
+      "id": 21,
+      "universidad_id": 3,
+      "nombre": "Medicina",
+      "facultad": "Medicina",
+      "duracion": "14 ciclos (7 años)",
+      "creditos": 340,
+      "descripcion": "Una de las escuelas de medicina más reconocidas del país.",
+      "planEstudios": "/mallas/unmsm-medicina.pdf"
+    },
+    {
+      "id": 22,
+      "universidad_id": 3,
+      "nombre": "Ingeniería de Software",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Desarrollo de software de calidad y gestión de proyectos tecnológicos.",
+      "planEstudios": "/mallas/unmsm-software.pdf"
+    },
+    {
+      "id": 23,
+      "universidad_id": 3,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Formación jurídica con enfoque en derecho público y privado.",
+      "planEstudios": "/mallas/unmsm-derecho.pdf"
+    },
+    {
+      "id": 24,
+      "universidad_id": 3,
+      "nombre": "Farmacia",
+      "facultad": "Farmacia y Bioquímica",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Ciencias farmacéuticas y bioquímica aplicada.",
+      "planEstudios": "/mallas/unmsm-farmacia.pdf"
+    },
+    {
+      "id": 25,
+      "universidad_id": 3,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Psicología clínica y comunitaria con enfoque social.",
+      "planEstudios": "/mallas/unmsm-psicologia.pdf"
+    },
+    {
+      "id": 26,
+      "universidad_id": 3,
+      "nombre": "Administración",
+      "facultad": "Administración",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Gestión pública y privada con visión estratégica.",
+      "planEstudios": "/mallas/unmsm-administracion.pdf"
+    },
+    {
+      "id": 27,
+      "universidad_id": 3,
+      "nombre": "Contabilidad",
+      "facultad": "Ciencias Contables",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Contabilidad, auditoría y finanzas corporativas.",
+      "planEstudios": "/mallas/unmsm-contabilidad.pdf"
+    },
+    {
+      "id": 28,
+      "universidad_id": 3,
+      "nombre": "Odontología",
+      "facultad": "Odontología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Salud oral y odontología clínica integral.",
+      "planEstudios": "/mallas/unmsm-odontologia.pdf"
+    },
+    {
+      "id": 29,
+      "universidad_id": 3,
+      "nombre": "Ingeniería Industrial",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Optimización industrial y gestión de operaciones.",
+      "planEstudios": "/mallas/unmsm-industrial.pdf"
+    },
+    {
+      "id": 30,
+      "universidad_id": 3,
+      "nombre": "Biología",
+      "facultad": "Ciencias Biológicas",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Biología molecular, ecología y ciencias de la vida.",
+      "planEstudios": "/mallas/unmsm-biologia.pdf"
+    },
+    {
+      "id": 31,
+      "universidad_id": 4,
+      "nombre": "Ingeniería de Sistemas",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Sistemas computacionales, redes y desarrollo de software.",
+      "planEstudios": "/mallas/uni-sistemas.pdf"
+    },
+    {
+      "id": 32,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Civil",
+      "facultad": "Ingeniería Civil",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 230,
+      "descripcion": "Infraestructura civil, estructuras y gestión de proyectos.",
+      "planEstudios": "/mallas/uni-civil.pdf"
+    },
+    {
+      "id": 33,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Industrial",
+      "facultad": "Ingeniería Industrial",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Procesos productivos y optimización de sistemas industriales.",
+      "planEstudios": "/mallas/uni-industrial.pdf"
+    },
+    {
+      "id": 34,
+      "universidad_id": 4,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 225,
+      "descripcion": "Arquitectura, urbanismo y diseño ambiental.",
+      "planEstudios": "/mallas/uni-arquitectura.pdf"
+    },
+    {
+      "id": 35,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Mecánica",
+      "facultad": "Ingeniería Mecánica",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Diseño mecánico, termodinámica y manufactura.",
+      "planEstudios": "/mallas/uni-mecanica.pdf"
+    },
+    {
+      "id": 36,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Electrónica",
+      "facultad": "Ingeniería Electrónica",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 218,
+      "descripcion": "Electrónica, telecomunicaciones y sistemas embebidos.",
+      "planEstudios": "/mallas/uni-electronica.pdf"
+    },
+    {
+      "id": 37,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Química",
+      "facultad": "Ingeniería Química",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Procesos químicos industriales y química aplicada.",
+      "planEstudios": "/mallas/uni-quimica.pdf"
+    },
+    {
+      "id": 38,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Ambiental",
+      "facultad": "Ingeniería Ambiental",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Gestión ambiental y desarrollo sostenible.",
+      "planEstudios": "/mallas/uni-ambiental.pdf"
+    },
+    {
+      "id": 39,
+      "universidad_id": 4,
+      "nombre": "Ingeniería de Telecomunicaciones",
+      "facultad": "Ingeniería Electrónica",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Redes de comunicación, fibra óptica y sistemas inalámbricos.",
+      "planEstudios": "/mallas/uni-telecomunicaciones.pdf"
+    },
+    {
+      "id": 40,
+      "universidad_id": 4,
+      "nombre": "Ingeniería Económica",
+      "facultad": "Ingeniería Económica",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Economía aplicada a proyectos de ingeniería.",
+      "planEstudios": "/mallas/uni-economica.pdf"
+    },
+    {
+      "id": 41,
+      "universidad_id": 5,
+      "nombre": "Ingeniería de Software",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 212,
+      "descripcion": "Desarrollo ágil de software, DevOps y arquitectura de sistemas.",
+      "planEstudios": "/mallas/upc-software.pdf"
+    },
+    {
+      "id": 42,
+      "universidad_id": 5,
+      "nombre": "Diseño Gráfico",
+      "facultad": "Diseño",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 195,
+      "descripcion": "Diseño digital, UX/UI y comunicación visual.",
+      "planEstudios": "/mallas/upc-diseno.pdf"
+    },
+    {
+      "id": 43,
+      "universidad_id": 5,
+      "nombre": "Negocios Internacionales",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Comercio exterior, logística internacional y finanzas globales.",
+      "planEstudios": "/mallas/upc-negocios.pdf"
+    },
+    {
+      "id": 44,
+      "universidad_id": 5,
+      "nombre": "Comunicaciones",
+      "facultad": "Comunicación",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 198,
+      "descripcion": "Comunicación corporativa, periodismo y medios digitales.",
+      "planEstudios": "/mallas/upc-comunicaciones.pdf"
+    },
+    {
+      "id": 45,
+      "universidad_id": 5,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 225,
+      "descripcion": "Arquitectura sostenible y diseño urbano contemporáneo.",
+      "planEstudios": "/mallas/upc-arquitectura.pdf"
+    },
+    {
+      "id": 46,
+      "universidad_id": 5,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Psicología organizacional y clínica.",
+      "planEstudios": "/mallas/upc-psicologia.pdf"
+    },
+    {
+      "id": 47,
+      "universidad_id": 5,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Administración moderna con enfoque en liderazgo y tecnología.",
+      "planEstudios": "/mallas/upc-administracion.pdf"
+    },
+    {
+      "id": 48,
+      "universidad_id": 5,
+      "nombre": "Marketing",
+      "facultad": "Marketing",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Marketing digital, e-commerce y estrategia de marca.",
+      "planEstudios": "/mallas/upc-marketing.pdf"
+    },
+    {
+      "id": 49,
+      "universidad_id": 5,
+      "nombre": "Ingeniería Civil",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Construcción, gestión de proyectos civiles y BIM.",
+      "planEstudios": "/mallas/upc-civil.pdf"
+    },
+    {
+      "id": 50,
+      "universidad_id": 5,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Derecho empresarial y nuevas tecnologías jurídicas.",
+      "planEstudios": "/mallas/upc-derecho.pdf"
+    },
+    {
+      "id": 51,
+      "universidad_id": 6,
+      "nombre": "Gastronomía",
+      "facultad": "Hotelería y Turismo",
+      "duracion": "8 ciclos (4 años)",
+      "creditos": 185,
+      "descripcion": "Arte culinario, gestión gastronómica y cocina internacional.",
+      "planEstudios": "/mallas/usil-gastronomia.pdf"
+    },
+    {
+      "id": 52,
+      "universidad_id": 6,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Administración con enfoque emprendedor e innovación.",
+      "planEstudios": "/mallas/usil-administracion.pdf"
+    },
+    {
+      "id": 53,
+      "universidad_id": 6,
+      "nombre": "Marketing",
+      "facultad": "Marketing",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Marketing experiencial y estrategia digital.",
+      "planEstudios": "/mallas/usil-marketing.pdf"
+    },
+    {
+      "id": 54,
+      "universidad_id": 6,
+      "nombre": "Ingeniería Empresarial",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Ingeniería aplicada a la gestión empresarial.",
+      "planEstudios": "/mallas/usil-empresarial.pdf"
+    },
+    {
+      "id": 55,
+      "universidad_id": 6,
+      "nombre": "Comunicaciones",
+      "facultad": "Comunicación",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 198,
+      "descripcion": "Comunicación estratégica y relaciones públicas.",
+      "planEstudios": "/mallas/usil-comunicaciones.pdf"
+    },
+    {
+      "id": 56,
+      "universidad_id": 6,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 225,
+      "descripcion": "Arquitectura con énfasis en diseño sostenible.",
+      "planEstudios": "/mallas/usil-arquitectura.pdf"
+    },
+    {
+      "id": 57,
+      "universidad_id": 6,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Derecho corporativo y relaciones internacionales.",
+      "planEstudios": "/mallas/usil-derecho.pdf"
+    },
+    {
+      "id": 58,
+      "universidad_id": 6,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Psicología organizacional y del consumidor.",
+      "planEstudios": "/mallas/usil-psicologia.pdf"
+    },
+    {
+      "id": 59,
+      "universidad_id": 6,
+      "nombre": "Negocios Internacionales",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Comercio internacional y cadenas de suministro globales.",
+      "planEstudios": "/mallas/usil-negocios.pdf"
+    },
+    {
+      "id": 60,
+      "universidad_id": 6,
+      "nombre": "Contabilidad",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Contabilidad financiera y tributación empresarial.",
+      "planEstudios": "/mallas/usil-contabilidad.pdf"
+    },
+    {
+      "id": 61,
+      "universidad_id": 7,
+      "nombre": "Medicina",
+      "facultad": "Medicina",
+      "duracion": "14 ciclos (7 años)",
+      "creditos": 340,
+      "descripcion": "Medicina clínica y salud preventiva.",
+      "planEstudios": "/mallas/urp-medicina.pdf"
+    },
+    {
+      "id": 62,
+      "universidad_id": 7,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 225,
+      "descripcion": "Arquitectura y urbanismo contemporáneo.",
+      "planEstudios": "/mallas/urp-arquitectura.pdf"
+    },
+    {
+      "id": 63,
+      "universidad_id": 7,
+      "nombre": "Ingeniería Informática",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Sistemas de información y desarrollo tecnológico.",
+      "planEstudios": "/mallas/urp-informatica.pdf"
+    },
+    {
+      "id": 64,
+      "universidad_id": 7,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Psicología clínica y educativa.",
+      "planEstudios": "/mallas/urp-psicologia.pdf"
+    },
+    {
+      "id": 65,
+      "universidad_id": 7,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Derecho penal, civil y constitucional.",
+      "planEstudios": "/mallas/urp-derecho.pdf"
+    },
+    {
+      "id": 66,
+      "universidad_id": 7,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Gestión empresarial y dirección estratégica.",
+      "planEstudios": "/mallas/urp-administracion.pdf"
+    },
+    {
+      "id": 67,
+      "universidad_id": 7,
+      "nombre": "Marketing",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 198,
+      "descripcion": "Investigación de mercados y publicidad.",
+      "planEstudios": "/mallas/urp-marketing.pdf"
+    },
+    {
+      "id": 68,
+      "universidad_id": 7,
+      "nombre": "Contabilidad",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Contabilidad y auditoría empresarial.",
+      "planEstudios": "/mallas/urp-contabilidad.pdf"
+    },
+    {
+      "id": 69,
+      "universidad_id": 7,
+      "nombre": "Traducción",
+      "facultad": "Humanidades",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 190,
+      "descripcion": "Traducción e interpretación en múltiples idiomas.",
+      "planEstudios": "/mallas/urp-traduccion.pdf"
+    },
+    {
+      "id": 70,
+      "universidad_id": 7,
+      "nombre": "Biología",
+      "facultad": "Ciencias Biológicas",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Biología aplicada y biotecnología.",
+      "planEstudios": "/mallas/urp-biologia.pdf"
+    },
+    {
+      "id": 71,
+      "universidad_id": 8,
+      "nombre": "Medicina",
+      "facultad": "Medicina",
+      "duracion": "14 ciclos (7 años)",
+      "creditos": 340,
+      "descripcion": "Medicina general con énfasis en investigación científica.",
+      "planEstudios": "/mallas/cientifica-medicina.pdf"
+    },
+    {
+      "id": 72,
+      "universidad_id": 8,
+      "nombre": "Odontología",
+      "facultad": "Ciencias de la Salud",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Salud bucal y odontología preventiva.",
+      "planEstudios": "/mallas/cientifica-odontologia.pdf"
+    },
+    {
+      "id": 73,
+      "universidad_id": 8,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Psicología clínica y neuropsicología.",
+      "planEstudios": "/mallas/cientifica-psicologia.pdf"
+    },
+    {
+      "id": 74,
+      "universidad_id": 8,
+      "nombre": "Ingeniería Ambiental",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Gestión ambiental y sostenibilidad.",
+      "planEstudios": "/mallas/cientifica-ambiental.pdf"
+    },
+    {
+      "id": 75,
+      "universidad_id": 8,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Administración con enfoque en innovación.",
+      "planEstudios": "/mallas/cientifica-administracion.pdf"
+    },
+    {
+      "id": 76,
+      "universidad_id": 8,
+      "nombre": "Marketing",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 195,
+      "descripcion": "Marketing digital y analítica de datos.",
+      "planEstudios": "/mallas/cientifica-marketing.pdf"
+    },
+    {
+      "id": 77,
+      "universidad_id": 8,
+      "nombre": "Veterinaria",
+      "facultad": "Veterinaria",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 220,
+      "descripcion": "Medicina veterinaria y zootecnia.",
+      "planEstudios": "/mallas/cientifica-veterinaria.pdf"
+    },
+    {
+      "id": 78,
+      "universidad_id": 8,
+      "nombre": "Nutrición",
+      "facultad": "Ciencias de la Salud",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Nutrición clínica y salud pública.",
+      "planEstudios": "/mallas/cientifica-nutricion.pdf"
+    },
+    {
+      "id": 79,
+      "universidad_id": 8,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Derecho ambiental y corporativo.",
+      "planEstudios": "/mallas/cientifica-derecho.pdf"
+    },
+    {
+      "id": 80,
+      "universidad_id": 8,
+      "nombre": "Biología Marina",
+      "facultad": "Ciencias Ambientales",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Ecosistemas marinos y recursos hidrobiológicos.",
+      "planEstudios": "/mallas/cientifica-biologia.pdf"
+    },
+    {
+      "id": 81,
+      "universidad_id": 9,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Administración de empresas con visión global.",
+      "planEstudios": "/mallas/esan-administracion.pdf"
+    },
+    {
+      "id": 82,
+      "universidad_id": 9,
+      "nombre": "Ingeniería de Tecnologías",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 212,
+      "descripcion": "Tecnologías de información aplicadas a los negocios.",
+      "planEstudios": "/mallas/esan-tecnologias.pdf"
+    },
+    {
+      "id": 83,
+      "universidad_id": 9,
+      "nombre": "Marketing",
+      "facultad": "Marketing",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Marketing estratégico y gestión comercial.",
+      "planEstudios": "/mallas/esan-marketing.pdf"
+    },
+    {
+      "id": 84,
+      "universidad_id": 9,
+      "nombre": "Economía",
+      "facultad": "Economía",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Economía empresarial y análisis financiero.",
+      "planEstudios": "/mallas/esan-economia.pdf"
+    },
+    {
+      "id": 85,
+      "universidad_id": 9,
+      "nombre": "Negocios Internacionales",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Comercio global, finanzas internacionales.",
+      "planEstudios": "/mallas/esan-negocios.pdf"
+    },
+    {
+      "id": 86,
+      "universidad_id": 9,
+      "nombre": "Contabilidad",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Contabilidad corporativa y finanzas.",
+      "planEstudios": "/mallas/esan-contabilidad.pdf"
+    },
+    {
+      "id": 87,
+      "universidad_id": 9,
+      "nombre": "Ingeniería Industrial",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Gestión de operaciones e ingeniería de procesos.",
+      "planEstudios": "/mallas/esan-industrial.pdf"
+    },
+    {
+      "id": 88,
+      "universidad_id": 9,
+      "nombre": "Finanzas",
+      "facultad": "Finanzas",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Mercados financieros, inversiones y banca.",
+      "planEstudios": "/mallas/esan-finanzas.pdf"
+    },
+    {
+      "id": 89,
+      "universidad_id": 9,
+      "nombre": "Derecho Corporativo",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Derecho empresarial y regulatorio.",
+      "planEstudios": "/mallas/esan-derecho.pdf"
+    },
+    {
+      "id": 90,
+      "universidad_id": 9,
+      "nombre": "Comunicación",
+      "facultad": "Comunicación",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 195,
+      "descripcion": "Comunicación corporativa y relaciones institucionales.",
+      "planEstudios": "/mallas/esan-comunicacion.pdf"
+    },
+    {
+      "id": 91,
+      "universidad_id": 10,
+      "nombre": "Derecho",
+      "facultad": "Derecho",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Derecho civil, penal y empresarial.",
+      "planEstudios": "/mallas/usmp-derecho.pdf"
+    },
+    {
+      "id": 92,
+      "universidad_id": 10,
+      "nombre": "Ingeniería de Computación",
+      "facultad": "Ingeniería",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 210,
+      "descripcion": "Computación, redes y sistemas de información.",
+      "planEstudios": "/mallas/usmp-computacion.pdf"
+    },
+    {
+      "id": 93,
+      "universidad_id": 10,
+      "nombre": "Medicina",
+      "facultad": "Medicina",
+      "duracion": "14 ciclos (7 años)",
+      "creditos": 340,
+      "descripcion": "Medicina clínica y salud comunitaria.",
+      "planEstudios": "/mallas/usmp-medicina.pdf"
+    },
+    {
+      "id": 94,
+      "universidad_id": 10,
+      "nombre": "Arquitectura",
+      "facultad": "Arquitectura",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 225,
+      "descripcion": "Arquitectura y diseño de interiores.",
+      "planEstudios": "/mallas/usmp-arquitectura.pdf"
+    },
+    {
+      "id": 95,
+      "universidad_id": 10,
+      "nombre": "Contabilidad",
+      "facultad": "Ciencias Contables",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Contabilidad, auditoría y tributación.",
+      "planEstudios": "/mallas/usmp-contabilidad.pdf"
+    },
+    {
+      "id": 96,
+      "universidad_id": 10,
+      "nombre": "Psicología",
+      "facultad": "Psicología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 200,
+      "descripcion": "Psicología clínica, educativa y forense.",
+      "planEstudios": "/mallas/usmp-psicologia.pdf"
+    },
+    {
+      "id": 97,
+      "universidad_id": 10,
+      "nombre": "Administración",
+      "facultad": "Negocios",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 205,
+      "descripcion": "Gestión empresarial y emprendimiento.",
+      "planEstudios": "/mallas/usmp-administracion.pdf"
+    },
+    {
+      "id": 98,
+      "universidad_id": 10,
+      "nombre": "Marketing",
+      "facultad": "Marketing",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 198,
+      "descripcion": "Marketing digital y gestión de marca.",
+      "planEstudios": "/mallas/usmp-marketing.pdf"
+    },
+    {
+      "id": 99,
+      "universidad_id": 10,
+      "nombre": "Odontología",
+      "facultad": "Odontología",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 215,
+      "descripcion": "Odontología general y especializada.",
+      "planEstudios": "/mallas/usmp-odontologia.pdf"
+    },
+    {
+      "id": 100,
+      "universidad_id": 10,
+      "nombre": "Turismo y Hotelería",
+      "facultad": "Turismo",
+      "duracion": "10 ciclos (5 años)",
+      "creditos": 195,
+      "descripcion": "Gestión hotelera y turismo sostenible.",
+      "planEstudios": "/mallas/usmp-turismo.pdf"
+    }
+  ],
+  "escalas": [
+    {
+      "id": 1,
+      "universidad_id": 1,
+      "escala": "Escala 1",
+      "rango": "S/. 1,800 - S/. 2,000"
+    },
+    {
+      "id": 2,
+      "universidad_id": 1,
+      "escala": "Escala 2",
+      "rango": "S/. 2,200 - S/. 2,500"
+    },
+    {
+      "id": 3,
+      "universidad_id": 1,
+      "escala": "Escala 3",
+      "rango": "S/. 2,800 - S/. 3,200"
+    },
+    {
+      "id": 4,
+      "universidad_id": 1,
+      "escala": "Escala 4",
+      "rango": "S/. 3,500 - S/. 4,200"
+    },
+    {
+      "id": 5,
+      "universidad_id": 2,
+      "escala": "Escala 1",
+      "rango": "S/. 800 - S/. 1,000"
+    },
+    {
+      "id": 6,
+      "universidad_id": 2,
+      "escala": "Escala 2",
+      "rango": "S/. 1,100 - S/. 1,300"
+    },
+    {
+      "id": 7,
+      "universidad_id": 2,
+      "escala": "Escala 3",
+      "rango": "S/. 1,300 - S/. 1,500"
+    },
+    {
+      "id": 8,
+      "universidad_id": 3,
+      "escala": "Única",
+      "rango": "S/. 0 (Costo administrativo mínimo por semestre)"
+    },
+    {
+      "id": 9,
+      "universidad_id": 4,
+      "escala": "Única",
+      "rango": "S/. 0 (Costo administrativo mínimo por semestre)"
+    },
+    {
+      "id": 10,
+      "universidad_id": 5,
+      "escala": "Escala 1",
+      "rango": "S/. 900 - S/. 1,200"
+    },
+    {
+      "id": 11,
+      "universidad_id": 5,
+      "escala": "Escala 2",
+      "rango": "S/. 1,200 - S/. 1,500"
+    },
+    {
+      "id": 12,
+      "universidad_id": 5,
+      "escala": "Escala 3",
+      "rango": "S/. 1,500 - S/. 1,800"
+    },
+    {
+      "id": 13,
+      "universidad_id": 6,
+      "escala": "Escala 1",
+      "rango": "S/. 700 - S/. 1,000"
+    },
+    {
+      "id": 14,
+      "universidad_id": 6,
+      "escala": "Escala 2",
+      "rango": "S/. 1,000 - S/. 1,400"
+    },
+    {
+      "id": 15,
+      "universidad_id": 7,
+      "escala": "Escala 1",
+      "rango": "S/. 600 - S/. 900"
+    },
+    {
+      "id": 16,
+      "universidad_id": 7,
+      "escala": "Escala 2",
+      "rango": "S/. 900 - S/. 1,200"
+    },
+    {
+      "id": 17,
+      "universidad_id": 8,
+      "escala": "Escala 1",
+      "rango": "S/. 700 - S/. 1,100"
+    },
+    {
+      "id": 18,
+      "universidad_id": 8,
+      "escala": "Escala 2",
+      "rango": "S/. 1,100 - S/. 1,500"
+    },
+    {
+      "id": 19,
+      "universidad_id": 9,
+      "escala": "Escala 1",
+      "rango": "S/. 1,000 - S/. 1,500"
+    },
+    {
+      "id": 20,
+      "universidad_id": 9,
+      "escala": "Escala 2",
+      "rango": "S/. 1,500 - S/. 2,000"
+    },
+    {
+      "id": 21,
+      "universidad_id": 10,
+      "escala": "Escala 1",
+      "rango": "S/. 500 - S/. 750"
+    },
+    {
+      "id": 22,
+      "universidad_id": 10,
+      "escala": "Escala 2",
+      "rango": "S/. 750 - S/. 1,000"
+    }
+  ],
+  "logos": [
+    {
+      "id": 1,
+      "universidad_id": 1,
+      "url": "/universidades/ulima.png",
+      "descripcion": "Logo de Universidad de Lima"
+    },
+    {
+      "id": 2,
+      "universidad_id": 2,
+      "url": "/universidades/pucp.png",
+      "descripcion": "Logo de Pontificia Universidad Católica del Perú"
+    },
+    {
+      "id": 3,
+      "universidad_id": 3,
+      "url": "/universidades/unmsm.png",
+      "descripcion": "Logo de Universidad Nacional Mayor de San Marcos"
+    },
+    {
+      "id": 4,
+      "universidad_id": 4,
+      "url": "/universidades/uni.png",
+      "descripcion": "Logo de Universidad Nacional de Ingeniería"
+    },
+    {
+      "id": 5,
+      "universidad_id": 5,
+      "url": "/universidades/upc.png",
+      "descripcion": "Logo de Universidad Peruana de Ciencias Aplicadas"
+    },
+    {
+      "id": 6,
+      "universidad_id": 6,
+      "url": "/universidades/usil.png",
+      "descripcion": "Logo de Universidad San Ignacio de Loyola"
+    },
+    {
+      "id": 7,
+      "universidad_id": 7,
+      "url": "/universidades/urp.png",
+      "descripcion": "Logo de Universidad Ricardo Palma"
+    },
+    {
+      "id": 8,
+      "universidad_id": 8,
+      "url": "/universidades/cientifica.png",
+      "descripcion": "Logo de Universidad Científica del Sur"
+    },
+    {
+      "id": 9,
+      "universidad_id": 9,
+      "url": "/universidades/esan.png",
+      "descripcion": "Logo de Universidad ESAN"
+    },
+    {
+      "id": 10,
+      "universidad_id": 10,
+      "url": "/universidades/usmp.png",
+      "descripcion": "Logo de Universidad de San Martín de Porres"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "nombres": "Carlos",
+      "apellidos": "Mendoza Torres",
+      "correo": "estudiante@ulima.edu.pe",
+      "contrasena": "ulima123",
+      "rol": "Estudiante",
+      "ciudad": "Lima",
+      "tipoColegio": "Privado",
+      "telefono": "987654321",
+      "edad": 18,
+      "sexo": "Masculino",
+      "carreraRecomendada": "Ingenieria de Sistemas y Computacion",
+      "ultimoIngreso": "10/7/2026",
+      "activo": true
+    },
+    {
+      "id": 2,
+      "nombres": "Maria",
+      "apellidos": "Garcia Lopez",
+      "correo": "profesor@ulima.edu.pe",
+      "contrasena": "profe123",
+      "rol": "Profesor",
+      "ciudad": "Lima",
+      "telefono": "999123456",
+      "edad": 38,
+      "sexo": "Femenino",
+      "especialidad": "Ingenieria de Sistemas",
+      "gradoAcademico": "Magister en Ingenieria de Software",
+      "activo": true
+    },
+    {
+      "id": 3,
+      "nombres": "Admin",
+      "apellidos": "VocaTest",
+      "correo": "admin@vocatest.pe",
+      "contrasena": "admin123",
+      "rol": "Administrador",
+      "ciudad": "Lima",
+      "activo": true
+    }
+  ],
+  "universidad_users": []
+}
