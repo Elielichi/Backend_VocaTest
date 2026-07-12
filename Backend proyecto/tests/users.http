@@ -2,23 +2,16 @@ GET http://localhost:3000/api/db/users
 
 ###
 
-POST http://localhost:3000/api/auth/register
-Content-Type: application/json
+GET http://localhost:3000/api/db/universidades
 
-{
-  "nombres": "Carlos",
-  "apellidos": "Mendoza",
-  "correo": "carlos.prueba@gmail.com",
-  "contrasena": "123456",
-  "rol": "Estudiante"
-}
+### 
+
+GET http://localhost:3000/api/db/carreras
+
+### 
+
+GET http://localhost:3000/api/db/escalas
 
 ###
 
-POST http://localhost:3000/api/auth/login
-Content-Type: application/json
-
-{
-  "correo": "carlos.prueba@gmail.com",
-  "contrasena": "123456"
-}
+GET http://localhost:3000/api/db/logos

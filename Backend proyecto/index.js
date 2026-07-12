@@ -345,16 +345,15 @@ app.post('/api/db/users', async (req, res) => {
 app.get('/', (req, res) => {
   res.json({
     ok: true,
-    mensaje: 'Backend VocaTest funcionando en el puerto 3000.',
+    mensaje: `Backend VocaTest funcionando en el puerto ${PORT}.`,
     endpoints: [
       '/api/auth/login',
       '/api/auth/register',
-      '/api/universidad',
-      '/api/carreras',
-      '/api/escalas',
-      '/api/logos',
-      '/api/users',
-      '/api/users/tipo/:tipo',
+      '/api/db/users',
+      '/api/db/universidades',
+      '/api/db/carreras',
+      '/api/db/escalas',
+      '/api/db/logos',
       '/api/universidad_users'
     ]
   });
@@ -545,6 +544,62 @@ app.get("/api/db/carreras", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       ok: false,
+      error: error.message,
+    });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+app.get("/api/db/escalas", async (req, res) => {
+  try {
+    const escalas = await prisma.escala.findMany({
+      include: {
+        universidad: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+    return res.json({
+      ok: true,
+      data: escalas,
+    });
+  } catch (error) {
+    console.error("Error obteniendo escalas:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudieron obtener las escalas.",
+      error: error.message,
+    });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+app.get("/api/db/logos", async (req, res) => {
+  try {
+    const logos = await prisma.logo.findMany({
+      include: {
+        universidad: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+    return res.json({
+      ok: true,
+      data: logos,
+    });
+  } catch (error) {
+    console.error("Error obteniendo logos:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudieron obtener los logos.",
       error: error.message,
     });
   }
