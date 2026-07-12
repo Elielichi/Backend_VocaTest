@@ -1,3 +1,27 @@
+/**
+ * Este archivo se utiliza únicamente para cargar los datos iniciales del
+ * proyecto desde el archivo data/db.json hacia la base de datos PostgreSQL
+ * alojada en Render utilizando Prisma.
+ *
+ * ¿Cuándo se usa?
+ * - La primera vez que se configura la base de datos.
+ * - Cuando se desea volver a poblar la base de datos con la información
+ *   original del proyecto.
+ *
+ * ¿Cómo se ejecuta?
+ *      node seed.js
+ *
+ * IMPORTANTE:
+ * Este script elimina previamente los registros existentes de las tablas
+ * antes de insertar nuevamente los datos de db.json. Por ello, no debe
+ * ejecutarse si se desea conservar la información almacenada en la base
+ * de datos.
+ * ============================================================================
+ */
+
+// Este archivo no forma parte de la ejecución normal del backend.
+// Solo debe ejecutarse manualmente cuando sea necesario inicializar o restaurar los datos de la base de datos.
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
