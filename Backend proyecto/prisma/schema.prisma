@@ -4,10 +4,73 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id                 Int     @id @default(autoincrement())
+  nombres            String
+  apellidos          String
+  correo             String  @unique
+  contrasena         String
+  rol                String  @default("Estudiante")
+  ciudad             String?
+  tipoColegio        String?
+  telefono           String?
+  edad               Int?
+  sexo               String?
+  carreraRecomendada String?
+  ultimoIngreso      String?
+  activo             Boolean @default(true)
+  especialidad       String?
+  gradoAcademico     String?
+}
+
+model Universidad {
+  id             Int     @id @default(autoincrement())
+  nombre         String
+  tipo           String
+  ubicacion      String?
+  costoMatricula String?
+  webOficial     String?
+
+  carreras Carrera[]
+  escalas  Escala[]
+  logos    Logo[]
+}
+
+model Carrera {
+  id             Int     @id @default(autoincrement())
+  universidad_id Int
+  nombre         String
+  facultad       String?
+  duracion       String?
+  creditos       Int?
+  descripcion    String?
+  planEstudios   String?
+
+  universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Escala {
+  id             Int     @id @default(autoincrement())
+  universidad_id Int
+  escala         String
+  rango          String?
+
+  universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Logo {
+  id             Int     @id @default(autoincrement())
+  universidad_id Int
+  url            String
+  descripcion    String?
+
+  universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
 }

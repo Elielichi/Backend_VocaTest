@@ -1,12 +1,21 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
-const vm = require('vm');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
+import vm from 'vm';
+import { fileURLToPath } from 'url';
+
+import { PrismaClient } from './generated/prisma/index.js';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+import 'dotenv/config';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
 const FRONTEND_UNIVERSIDADES_PATH = path.join(
   __dirname,
@@ -26,6 +35,21 @@ const ROLES = {
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+///////
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+const adapter = new PrismaPg(pool);
+
+const prisma = new PrismaClient({
+  adapter,
+});
+///////
 
 function readJson(filePath, fallback) {
   try {
@@ -237,6 +261,87 @@ function createCrudRoutes(entityName) {
   });
 }
 
+////////////
+app.get('/api/db/users', async (req, res) => {
+  try {
+    const usuarios = await prisma.user.findMany({
+      orderBy: {
+        id: 'asc',
+      },
+    });
+
+    return res.json({
+      ok: true,
+      data: usuarios,
+    });
+  } catch (error) {
+    console.error('Error obteniendo usuarios desde PostgreSQL:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudieron obtener los usuarios.',
+    });
+  }
+});
+////////////
+
+////////////
+app.post('/api/db/users', async (req, res) => {
+  try {
+    const {
+      nombres,
+      apellidos,
+      correo,
+      contrasena,
+      rol,
+    } = req.body;
+
+    if (!nombres || !apellidos || !correo || !contrasena) {
+      return res.status(400).json({
+        ok: false,
+        mensaje:
+          'Nombres, apellidos, correo y contraseña son obligatorios.',
+      });
+    }
+
+    const usuarioExistente = await prisma.user.findUnique({
+      where: {
+        correo: correo.trim().toLowerCase(),
+      },
+    });
+
+    if (usuarioExistente) {
+      return res.status(409).json({
+        ok: false,
+        mensaje: 'El correo ya está registrado.',
+      });
+    }
+
+    const nuevoUsuario = await prisma.user.create({
+      data: {
+        nombres: nombres.trim(),
+        apellidos: apellidos.trim(),
+        correo: correo.trim().toLowerCase(),
+        contrasena,
+        rol: rol || 'Estudiante',
+      },
+    });
+
+    return res.status(201).json({
+      ok: true,
+      data: nuevoUsuario,
+    });
+  } catch (error) {
+    console.error('Error creando usuario:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudo crear el usuario.',
+    });
+  }
+});
+///////////////
+
 app.get('/', (req, res) => {
   res.json({
     ok: true,
@@ -255,62 +360,112 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/api/auth/login', (req, res) => {
-  const { correo, contrasena, password } = req.body;
+/////////////////////
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const correo = String(req.body.correo || '')
+      .trim()
+      .toLowerCase();
 
-  if (!correo || (!contrasena && !password)) {
-    return res.status(400).json({ ok: false, mensaje: 'Correo y contrasena son obligatorios.' });
+    const contrasena = getPassword(req.body);
+
+    if (!correo || !contrasena) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: 'Correo y contraseña son obligatorios.'
+      });
+    }
+
+    const usuario = await prisma.user.findUnique({
+      where: {
+        correo
+      }
+    });
+
+    if (!usuario || usuario.contrasena !== contrasena) {
+      return res.status(401).json({
+        ok: false,
+        mensaje: 'Credenciales incorrectas.'
+      });
+    }
+
+    return res.json({
+      ok: true,
+      data: usuario,
+      rol: usuario.rol
+    });
+  } catch (error) {
+    console.error('Error iniciando sesión:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudo iniciar sesión.',
+      error: error.message
+    });
   }
-
-  const db = getDb();
-  const user = db.users.find(
-    (record) =>
-      record.correo.toLowerCase() === String(correo).trim().toLowerCase() &&
-      getPassword(record) === (contrasena || password)
-  );
-
-  if (!user) {
-    return res.status(401).json({ ok: false, mensaje: 'Credenciales incorrectas.' });
-  }
-
-  user.ultimoIngreso = new Date().toLocaleDateString('es-PE');
-  saveDb(db);
-  return res.json({ ok: true, data: user, rol: user.rol });
 });
+/////////////////////
 
-app.post('/api/auth/register', (req, res) => {
-  const db = getDb();
-  const correo = String(req.body.correo || '').trim().toLowerCase();
+/////////////////////
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const correo = String(req.body.correo || '')
+      .trim()
+      .toLowerCase();
 
-  if (!req.body.nombres || !req.body.apellidos || !correo || !getPassword(req.body)) {
-    return res.status(400).json({ ok: false, mensaje: 'Nombres, apellidos, correo y contrasena son obligatorios.' });
+    const contrasena = getPassword(req.body);
+
+    if (
+      !req.body.nombres ||
+      !req.body.apellidos ||
+      !correo ||
+      !contrasena
+    ) {
+      return res.status(400).json({
+        ok: false,
+        mensaje:
+          'Nombres, apellidos, correo y contraseña son obligatorios.'
+      });
+    }
+
+    const usuarioExistente = await prisma.user.findUnique({
+      where: {
+        correo
+      }
+    });
+
+    if (usuarioExistente) {
+      return res.status(409).json({
+        ok: false,
+        mensaje: 'Este correo ya está registrado.'
+      });
+    }
+
+    const nuevoUsuario = await prisma.user.create({
+      data: {
+        nombres: String(req.body.nombres).trim(),
+        apellidos: String(req.body.apellidos).trim(),
+        correo,
+        contrasena,
+        rol: normalizeRole(req.body.rol)
+      }
+    });
+
+    return res.status(201).json({
+      ok: true,
+      data: nuevoUsuario
+    });
+  } catch (error) {
+    console.error('Error registrando usuario:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudo registrar al usuario.',
+      error: error.message
+    });
   }
-
-  if (db.users.some((user) => user.correo.toLowerCase() === correo)) {
-    return res.status(409).json({ ok: false, mensaje: 'Este correo ya esta registrado.' });
-  }
-
-  const user = {
-    id: nextId(db.users),
-    nombres: req.body.nombres,
-    apellidos: req.body.apellidos,
-    correo,
-    contrasena: getPassword(req.body),
-    rol: normalizeRole(req.body.rol),
-    ciudad: req.body.ciudad || '',
-    telefono: req.body.telefono || '',
-    edad: req.body.edad || '',
-    sexo: req.body.sexo || '',
-    tipoColegio: req.body.tipoColegio || '',
-    carreraRecomendada: req.body.carreraRecomendada || '',
-    ultimoIngreso: new Date().toLocaleDateString('es-PE'),
-    activo: true
-  };
-
-  db.users.push(user);
-  saveDb(db);
-  return res.status(201).json({ ok: true, data: user });
 });
+/////////////////////
 
 app.get('/api/users/tipo/:tipo', (req, res) => {
   const db = getDb();
@@ -343,10 +498,64 @@ createCrudRoutes('logos');
 createCrudRoutes('users');
 createCrudRoutes('universidad_users');
 
+//////////////////////////////
+app.get("/api/db/universidades", async (req, res) => {
+  try {
+    const universidades =
+      await prisma.universidad.findMany({
+        include: {
+          carreras: true,
+          escalas: true,
+          logos: true,
+        },
+        orderBy: {
+          id: "asc",
+        },
+      });
+
+    return res.json({
+      ok: true,
+      data: universidades,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      error: error.message,
+    });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+app.get("/api/db/carreras", async (req, res) => {
+  try {
+    const carreras = await prisma.carrera.findMany({
+      include: {
+        universidad: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+    return res.json({
+      ok: true,
+      data: carreras,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      error: error.message,
+    });
+  }
+});
+//////////////////////////////
+
 app.use((req, res) => {
   res.status(404).json({ ok: false, mensaje: 'Ruta no encontrada.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+// PARA RENDER MEJOR SERIA ESTO:
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor backend corriendo en el puerto ${PORT}`);
 });

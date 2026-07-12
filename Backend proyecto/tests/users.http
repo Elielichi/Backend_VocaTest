@@ -1,0 +1,24 @@
+GET http://localhost:3000/api/db/users
+
+###
+
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "nombres": "Carlos",
+  "apellidos": "Mendoza",
+  "correo": "carlos.prueba@gmail.com",
+  "contrasena": "123456",
+  "rol": "Estudiante"
+}
+
+###
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "correo": "carlos.prueba@gmail.com",
+  "contrasena": "123456"
+}
