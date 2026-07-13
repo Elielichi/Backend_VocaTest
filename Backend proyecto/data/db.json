@@ -1322,5 +1322,7 @@
       "activo": true
     }
   ],
-  "universidad_users": []
+  "universidad_users": [],
+
+  "historial_tests": []
 }
