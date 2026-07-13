@@ -1,13 +1,67 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Carrera {
+  id             Int         @id @default(autoincrement())
+  universidad_id Int
+  nombre         String
+  facultad       String?
+  duracion       String?
+  creditos       Int?
+  descripcion    String?
+  planEstudios   String?
+  Universidad    Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Escala {
+  id             Int         @id @default(autoincrement())
+  universidad_id Int
+  escala         String
+  rango          String?
+  Universidad    Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Logo {
+  id             Int         @id @default(autoincrement())
+  universidad_id Int
+  url            String
+  descripcion    String?
+  Universidad    Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Universidad {
+  id             Int       @id @default(autoincrement())
+  nombre         String
+  tipo           String
+  ubicacion      String?
+  costoMatricula String?
+  webOficial     String?
+  Carrera        Carrera[]
+  Escala         Escala[]
+  Logo           Logo[]
+}
+
+model User {
+  id                 Int     @id @default(autoincrement())
+  nombres            String
+  apellidos          String
+  correo             String  @unique
+  contrasena         String
+  rol                String  @default("Estudiante")
+  activo             Boolean @default(true)
+  carreraRecomendada String?
+  ciudad             String?
+  edad               Int?
+  especialidad       String?
+  gradoAcademico     String?
+  sexo               String?
+  telefono           String?
+  tipoColegio        String?
+  ultimoIngreso      String?
 }

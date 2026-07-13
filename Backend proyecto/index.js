@@ -1,12 +1,16 @@
+require('dotenv').config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { PrismaClient } = require('@prisma/client');
 
+const prisma = new PrismaClient();
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
 const FRONTEND_UNIVERSIDADES_PATH = path.join(
   __dirname,
@@ -255,27 +259,67 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/api/auth/login', (req, res) => {
-  const { correo, contrasena, password } = req.body;
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { correo, contrasena, password } = req.body;
 
-  if (!correo || (!contrasena && !password)) {
-    return res.status(400).json({ ok: false, mensaje: 'Correo y contrasena son obligatorios.' });
+    const correoNormalizado = String(correo || '')
+      .trim()
+      .toLowerCase();
+
+    const passwordIngresado = contrasena || password;
+
+    if (!correoNormalizado || !passwordIngresado) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: 'Correo y contraseña son obligatorios.'
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        correo: correoNormalizado
+      }
+    });
+
+    if (!user || user.contrasena !== passwordIngresado) {
+      return res.status(401).json({
+        ok: false,
+        mensaje: 'Credenciales incorrectas.'
+      });
+    }
+
+    if (!user.activo) {
+      return res.status(403).json({
+        ok: false,
+        mensaje: 'La cuenta se encuentra desactivada.'
+      });
+    }
+
+    const usuarioActualizado = await prisma.user.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        ultimoIngreso: new Date().toLocaleDateString('es-PE')
+      }
+    });
+
+    const { contrasena: _, ...usuarioSinContrasena } = usuarioActualizado;
+
+    return res.json({
+      ok: true,
+      data: usuarioSinContrasena,
+      rol: usuarioActualizado.rol
+    });
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'Ocurrió un error al iniciar sesión.'
+    });
   }
-
-  const db = getDb();
-  const user = db.users.find(
-    (record) =>
-      record.correo.toLowerCase() === String(correo).trim().toLowerCase() &&
-      getPassword(record) === (contrasena || password)
-  );
-
-  if (!user) {
-    return res.status(401).json({ ok: false, mensaje: 'Credenciales incorrectas.' });
-  }
-
-  user.ultimoIngreso = new Date().toLocaleDateString('es-PE');
-  saveDb(db);
-  return res.json({ ok: true, data: user, rol: user.rol });
 });
 
 app.post('/api/auth/register', (req, res) => {
@@ -347,6 +391,20 @@ app.use((req, res) => {
   res.status(404).json({ ok: false, mensaje: 'Ruta no encontrada.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
-});
+async function iniciarServidor() {
+  try {
+    await prisma.$connect();
+
+    console.log('Conexión con PostgreSQL establecida correctamente.');
+
+    app.listen(PORT, () => {
+      console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('No se pudo conectar con PostgreSQL:');
+    console.error(error);
+    process.exit(1);
+  }
+}
+
+iniciarServidor();
