@@ -322,38 +322,151 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-app.post('/api/auth/register', (req, res) => {
-  const db = getDb();
-  const correo = String(req.body.correo || '').trim().toLowerCase();
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const {
+      nombres,
+      apellidos,
+      correo,
+      contrasena,
+      contraseña,
+      password,
+      rol,
+      ciudad,
+      telefono,
+      edad,
+      sexo,
+      tipoColegio,
+      carreraRecomendada,
+      especialidad,
+      gradoAcademico
+    } = req.body;
 
-  if (!req.body.nombres || !req.body.apellidos || !correo || !getPassword(req.body)) {
-    return res.status(400).json({ ok: false, mensaje: 'Nombres, apellidos, correo y contrasena son obligatorios.' });
+    const correoNormalizado = String(correo || '')
+      .trim()
+      .toLowerCase();
+
+    const passwordIngresado =
+      contrasena || contraseña || password;
+
+    if (
+      !String(nombres || '').trim() ||
+      !String(apellidos || '').trim() ||
+      !correoNormalizado ||
+      !passwordIngresado
+    ) {
+      return res.status(400).json({
+        ok: false,
+        mensaje:
+          'Nombres, apellidos, correo y contraseña son obligatorios.'
+      });
+    }
+
+    const usuarioExistente = await prisma.user.findUnique({
+      where: {
+        correo: correoNormalizado
+      }
+    });
+
+    if (usuarioExistente) {
+      return res.status(409).json({
+        ok: false,
+        mensaje: 'Este correo ya está registrado.'
+      });
+    }
+
+    const edadConvertida =
+      edad === '' || edad === undefined || edad === null
+        ? null
+        : Number(edad);
+
+    if (
+      edadConvertida !== null &&
+      (!Number.isInteger(edadConvertida) ||
+        edadConvertida < 15 ||
+        edadConvertida > 80)
+    ) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: 'La edad debe estar entre 15 y 80 años.'
+      });
+    }
+
+    const nuevoUsuario = await prisma.user.create({
+      data: {
+        nombres: String(nombres).trim(),
+        apellidos: String(apellidos).trim(),
+        correo: correoNormalizado,
+        contrasena: String(passwordIngresado),
+
+        rol:
+          rol === 'Profesor' ||
+          rol === 'Administrador'
+            ? rol
+            : 'Estudiante',
+
+        activo: true,
+
+        ciudad: ciudad
+          ? String(ciudad).trim()
+          : null,
+
+        telefono: telefono
+          ? String(telefono).trim()
+          : null,
+
+        edad: edadConvertida,
+
+        sexo: sexo
+          ? String(sexo).trim()
+          : null,
+
+        tipoColegio: tipoColegio
+          ? String(tipoColegio).trim()
+          : null,
+
+        carreraRecomendada: carreraRecomendada
+          ? String(carreraRecomendada).trim()
+          : null,
+
+        especialidad: especialidad
+          ? String(especialidad).trim()
+          : null,
+
+        gradoAcademico: gradoAcademico
+          ? String(gradoAcademico).trim()
+          : null,
+
+        ultimoIngreso:
+          new Date().toLocaleDateString('es-PE')
+      }
+    });
+
+    const {
+      contrasena: _,
+      ...usuarioSinContrasena
+    } = nuevoUsuario;
+
+    return res.status(201).json({
+      ok: true,
+      data: usuarioSinContrasena,
+      rol: nuevoUsuario.rol
+    });
+  } catch (error) {
+    console.error('Error al registrar usuario:', error);
+
+    if (error.code === 'P2002') {
+      return res.status(409).json({
+        ok: false,
+        mensaje: 'Este correo ya está registrado.'
+      });
+    }
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'Ocurrió un error al registrar el usuario.'
+    });
   }
-
-  if (db.users.some((user) => user.correo.toLowerCase() === correo)) {
-    return res.status(409).json({ ok: false, mensaje: 'Este correo ya esta registrado.' });
-  }
-
-  const user = {
-    id: nextId(db.users),
-    nombres: req.body.nombres,
-    apellidos: req.body.apellidos,
-    correo,
-    contrasena: getPassword(req.body),
-    rol: normalizeRole(req.body.rol),
-    ciudad: req.body.ciudad || '',
-    telefono: req.body.telefono || '',
-    edad: req.body.edad || '',
-    sexo: req.body.sexo || '',
-    tipoColegio: req.body.tipoColegio || '',
-    carreraRecomendada: req.body.carreraRecomendada || '',
-    ultimoIngreso: new Date().toLocaleDateString('es-PE'),
-    activo: true
-  };
-
-  db.users.push(user);
-  saveDb(db);
-  return res.status(201).json({ ok: true, data: user });
 });
 
 app.get('/api/users/tipo/:tipo', (req, res) => {
