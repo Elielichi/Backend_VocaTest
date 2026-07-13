@@ -526,6 +526,43 @@ app.get("/api/db/universidades", async (req, res) => {
 //////////////////////////////
 
 //////////////////////////////
+app.put("/api/db/users/:id", async (req, res) => {
+  try {
+    const { nombres, apellidos, correo, contrasena, rol } = req.body;
+
+    const dataToUpdate = {};
+    if (nombres !== undefined) dataToUpdate.nombres = nombres;
+    if (apellidos !== undefined) dataToUpdate.apellidos = apellidos;
+    if (correo !== undefined) dataToUpdate.correo = correo.trim().toLowerCase();
+    if (contrasena !== undefined) dataToUpdate.contrasena = contrasena;
+    if (rol !== undefined) dataToUpdate.rol = rol;
+
+    const usuarioActualizado = await prisma.user.update({
+      where: { id: Number(req.params.id) },
+      data: dataToUpdate,
+    });
+
+    return res.json({ ok: true, data: usuarioActualizado });
+  } catch (error) {
+    console.error("Error actualizando usuario:", error);
+    return res.status(500).json({ ok: false, mensaje: "No se pudo actualizar el usuario.", error: error.message });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+app.delete("/api/db/users/:id", async (req, res) => {
+  try {
+    await prisma.user.delete({ where: { id: Number(req.params.id) } });
+    return res.json({ ok: true, mensaje: "Usuario eliminado." });
+  } catch (error) {
+    console.error("Error eliminando usuario:", error);
+    return res.status(500).json({ ok: false, mensaje: "No se pudo eliminar el usuario.", error: error.message });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
 app.get("/api/db/carreras", async (req, res) => {
   try {
     const carreras = await prisma.carrera.findMany({
