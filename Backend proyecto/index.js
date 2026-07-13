@@ -606,6 +606,35 @@ app.get("/api/db/logos", async (req, res) => {
 });
 //////////////////////////////
 
+//////////////////////////////
+app.get('/api/db/universidad-users', async (req, res) => {
+  try {
+    const favoritos = await prisma.universidadUser.findMany({
+      include: {
+        user: true,
+        universidad: true
+      },
+      orderBy: {
+        fechaAgregado: 'desc'
+      }
+    });
+
+    return res.json({
+      ok: true,
+      data: favoritos
+    });
+  } catch (error) {
+    console.error('Error obteniendo universidades favoritas:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudieron obtener las universidades favoritas.',
+      error: error.message
+    });
+  }
+});
+//////////////////////////////
+
 app.use((req, res) => {
   res.status(404).json({ ok: false, mensaje: 'Ruta no encontrada.' });
 });

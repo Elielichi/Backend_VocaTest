@@ -29,6 +29,8 @@ model User {
   activo             Boolean @default(true)
   especialidad       String?
   gradoAcademico     String?
+
+  universidadesFavoritas UniversidadUser[]
 }
 
 model Universidad {
@@ -42,6 +44,8 @@ model Universidad {
   carreras Carrera[]
   escalas  Escala[]
   logos    Logo[]
+
+  usuariosFavoritos UniversidadUser[]
 }
 
 model Carrera {
@@ -73,4 +77,15 @@ model Logo {
   descripcion    String?
 
   universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model UniversidadUser {
+  userId        Int
+  universidadId Int
+  fechaAgregado DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  universidad Universidad @relation(fields: [universidadId], references: [id], onDelete: Cascade)
+
+  @@id([userId, universidadId])
 }
