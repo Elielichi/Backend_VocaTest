@@ -635,6 +635,34 @@ app.get('/api/db/universidad-users', async (req, res) => {
 });
 //////////////////////////////
 
+//////////////////////////////
+app.get('/api/db/historial-tests', async (req, res) => {
+  try {
+    const historial = await prisma.historialTest.findMany({
+      include: {
+        user: true
+      },
+      orderBy: {
+        fecha: 'desc'
+      }
+    });
+
+    return res.json({
+      ok: true,
+      data: historial
+    });
+  } catch (error) {
+    console.error('Error obteniendo historial de tests:', error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudo obtener el historial de tests.',
+      error: error.message
+    });
+  }
+});
+//////////////////////////////
+
 app.use((req, res) => {
   res.status(404).json({ ok: false, mensaje: 'Ruta no encontrada.' });
 });

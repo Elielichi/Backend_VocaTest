@@ -31,6 +31,7 @@ model User {
   gradoAcademico     String?
 
   universidadesFavoritas UniversidadUser[]
+  historialTests         HistorialTest[]
 }
 
 model Universidad {
@@ -88,4 +89,13 @@ model UniversidadUser {
   universidad Universidad @relation(fields: [universidadId], references: [id], onDelete: Cascade)
 
   @@id([userId, universidadId])
+}
+
+model HistorialTest {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  resultado String
+  fecha     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
