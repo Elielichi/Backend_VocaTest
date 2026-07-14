@@ -34,8 +34,19 @@ const ROLES = {
 };
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  bodyParser.json({
+    limit: "15mb",
+  }),
+);
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: "15mb",
+  }),
+);
 
 ///////
 const pool = new Pool({
@@ -473,6 +484,10 @@ app.post("/api/auth/register", async (req, res) => {
 
     const contrasena = String(getPassword(req.body) || "").trim();
 
+    const carreraRecomendada = req.body.carreraRecomendada
+      ? String(req.body.carreraRecomendada).trim()
+      : null;
+
     if (!nombres || !apellidos || !correo || !contrasena) {
       return res.status(400).json({
         ok: false,
@@ -575,9 +590,7 @@ app.post("/api/auth/register", async (req, res) => {
           ? String(req.body.tipoColegio).trim()
           : null,
 
-        carreraRecomendada: req.body.carreraRecomendada
-          ? String(req.body.carreraRecomendada).trim()
-          : null,
+        carreraRecomendada,
 
         especialidad: req.body.especialidad
           ? String(req.body.especialidad).trim()
@@ -588,6 +601,14 @@ app.post("/api/auth/register", async (req, res) => {
           : null,
 
         activo: true,
+
+        historialTests: carreraRecomendada
+          ? {
+              create: {
+                resultado: carreraRecomendada,
+              },
+            }
+          : undefined,
       },
     });
 
@@ -682,6 +703,404 @@ app.get("/api/db/universidades", async (req, res) => {
   }
 });
 //////////////////////////////
+
+app.post("/api/db/universidades", async (req, res) => {
+  try {
+    const nombre = String(req.body.nombre || "").trim();
+    const tipo = String(req.body.tipo || "Privada").trim();
+
+    if (!nombre) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El nombre de la universidad es obligatorio.",
+      });
+    }
+
+    const universidadExistente = await prisma.universidad.findFirst({
+      where: {
+        nombre: {
+          equals: nombre,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    if (universidadExistente) {
+      return res.status(409).json({
+        ok: false,
+        mensaje: "Ya existe una universidad con ese nombre.",
+      });
+    }
+
+    const carrerasRecibidas = Array.isArray(req.body.carreras)
+      ? req.body.carreras
+      : [];
+
+    const escalasRecibidas = Array.isArray(req.body.escalas)
+      ? req.body.escalas
+      : [];
+
+    const carrerasValidas = carrerasRecibidas
+      .map((carrera) => ({
+        nombre: String(carrera.nombre || "").trim(),
+
+        facultad: carrera.facultad ? String(carrera.facultad).trim() : null,
+
+        duracion: carrera.duracion ? String(carrera.duracion).trim() : null,
+
+        creditos:
+          carrera.creditos !== undefined &&
+          carrera.creditos !== null &&
+          carrera.creditos !== ""
+            ? Number(carrera.creditos)
+            : null,
+
+        descripcion: carrera.descripcion
+          ? String(carrera.descripcion).trim()
+          : null,
+
+        planEstudios: carrera.planEstudios || null,
+      }))
+      .filter((carrera) => carrera.nombre);
+
+    const escalasValidas = escalasRecibidas
+      .map((escala) => ({
+        escala: String(escala.escala || "").trim(),
+
+        rango: escala.rango ? String(escala.rango).trim() : null,
+      }))
+      .filter((escala) => escala.escala);
+
+    const dataUniversidad = {
+      nombre,
+      tipo,
+
+      ubicacion: req.body.ubicacion ? String(req.body.ubicacion).trim() : null,
+
+      costoMatricula: req.body.costoMatricula
+        ? String(req.body.costoMatricula).trim()
+        : null,
+
+      webOficial: req.body.webOficial
+        ? String(req.body.webOficial).trim()
+        : null,
+    };
+
+    if (carrerasValidas.length > 0) {
+      dataUniversidad.carreras = {
+        create: carrerasValidas,
+      };
+    }
+
+    if (escalasValidas.length > 0) {
+      dataUniversidad.escalas = {
+        create: escalasValidas,
+      };
+    }
+
+    if (req.body.logo) {
+      dataUniversidad.logos = {
+        create: {
+          url: String(req.body.logo),
+          descripcion: `Logo de ${nombre}`,
+        },
+      };
+    }
+
+    const nuevaUniversidad = await prisma.universidad.create({
+      data: dataUniversidad,
+
+      include: {
+        carreras: true,
+        escalas: true,
+        logos: true,
+      },
+    });
+
+    return res.status(201).json({
+      ok: true,
+      mensaje: "Universidad registrada correctamente.",
+      data: nuevaUniversidad,
+    });
+  } catch (error) {
+    console.error("Error creando universidad:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo registrar la universidad.",
+      error: error.message,
+    });
+  }
+});
+
+app.put("/api/db/universidades/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID de la universidad no es válido.",
+      });
+    }
+
+    const universidadActual = await prisma.universidad.findUnique({
+      where: {
+        id,
+      },
+
+      include: {
+        carreras: true,
+        escalas: true,
+        logos: true,
+      },
+    });
+
+    if (!universidadActual) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "La universidad no existe.",
+      });
+    }
+
+    const nombre = String(req.body.nombre ?? universidadActual.nombre).trim();
+
+    const tipo = String(req.body.tipo ?? universidadActual.tipo).trim();
+
+    if (!nombre) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El nombre de la universidad es obligatorio.",
+      });
+    }
+
+    const universidadRepetida = await prisma.universidad.findFirst({
+      where: {
+        nombre: {
+          equals: nombre,
+          mode: "insensitive",
+        },
+
+        NOT: {
+          id,
+        },
+      },
+    });
+
+    if (universidadRepetida) {
+      return res.status(409).json({
+        ok: false,
+        mensaje: "Ya existe otra universidad con ese nombre.",
+      });
+    }
+
+    const datosActualizar = {
+      nombre,
+      tipo,
+
+      ubicacion: req.body.ubicacion ? String(req.body.ubicacion).trim() : null,
+
+      costoMatricula: req.body.costoMatricula
+        ? String(req.body.costoMatricula).trim()
+        : null,
+
+      webOficial: req.body.webOficial
+        ? String(req.body.webOficial).trim()
+        : null,
+    };
+
+    /*
+     * Solo se reemplaza el logo cuando el frontend
+     * envía explícitamente la propiedad "logo".
+     */
+    if (req.body.logo !== undefined) {
+      if (req.body.logo) {
+        datosActualizar.logos = {
+          deleteMany: {},
+
+          create: {
+            url: String(req.body.logo),
+            descripcion: `Logo de ${nombre}`,
+          },
+        };
+      } else {
+        datosActualizar.logos = {
+          deleteMany: {},
+        };
+      }
+    }
+
+    /*
+     * Las carreras que ya existen tienen ID.
+     * Solamente se crean las carreras nuevas, que no tienen ID.
+     */
+    const carrerasRecibidas = Array.isArray(req.body.carreras)
+      ? req.body.carreras
+      : [];
+
+    const carrerasNuevas = carrerasRecibidas
+      .filter((carrera) => !carrera.id)
+      .map((carrera) => ({
+        nombre: String(carrera.nombre || "").trim(),
+
+        facultad: carrera.facultad ? String(carrera.facultad).trim() : null,
+
+        duracion: carrera.duracion ? String(carrera.duracion).trim() : null,
+
+        creditos:
+          carrera.creditos !== undefined &&
+          carrera.creditos !== null &&
+          carrera.creditos !== ""
+            ? Number(carrera.creditos)
+            : null,
+
+        descripcion: carrera.descripcion
+          ? String(carrera.descripcion).trim()
+          : null,
+
+        planEstudios: carrera.planEstudios || null,
+      }))
+      .filter((carrera) => carrera.nombre);
+
+    if (carrerasNuevas.length > 0) {
+      datosActualizar.carreras = {
+        create: carrerasNuevas,
+      };
+    }
+
+    const universidadActualizada = await prisma.universidad.update({
+      where: {
+        id,
+      },
+
+      data: datosActualizar,
+
+      include: {
+        carreras: {
+          orderBy: {
+            id: "asc",
+          },
+        },
+
+        escalas: {
+          orderBy: {
+            id: "asc",
+          },
+        },
+
+        logos: {
+          orderBy: {
+            id: "asc",
+          },
+        },
+      },
+    });
+
+    return res.json({
+      ok: true,
+      mensaje: "Universidad actualizada correctamente.",
+      data: universidadActualizada,
+    });
+  } catch (error) {
+    console.error("Error actualizando universidad:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo actualizar la universidad.",
+      error: error.message,
+    });
+  }
+});
+
+app.delete("/api/db/universidades/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID de la universidad no es válido.",
+      });
+    }
+
+    const universidad = await prisma.universidad.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!universidad) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "La universidad no existe.",
+      });
+    }
+
+    await prisma.universidad.delete({
+      where: {
+        id,
+      },
+    });
+
+    return res.json({
+      ok: true,
+      mensaje: "Universidad eliminada correctamente.",
+    });
+  } catch (error) {
+    console.error("Error eliminando universidad:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo eliminar la universidad.",
+      error: error.message,
+    });
+  }
+});
+
+app.delete("/api/db/carreras/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID de la carrera no es válido.",
+      });
+    }
+
+    const carrera = await prisma.carrera.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!carrera) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "La carrera no existe.",
+      });
+    }
+
+    await prisma.carrera.delete({
+      where: {
+        id,
+      },
+    });
+
+    return res.json({
+      ok: true,
+      mensaje: "Carrera eliminada correctamente.",
+    });
+  } catch (error) {
+    console.error("Error eliminando carrera:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo eliminar la carrera.",
+      error: error.message,
+    });
+  }
+});
 
 app.put("/api/db/users/:id/profile", async (req, res) => {
   try {
@@ -1005,6 +1424,226 @@ app.get("/api/db/universidad-users", async (req, res) => {
 });
 //////////////////////////////
 
+app.get("/api/db/users/:userId/favoritos", async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID del usuario no es válido.",
+      });
+    }
+
+    const usuario = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "El usuario no existe.",
+      });
+    }
+
+    const favoritos = await prisma.universidadUser.findMany({
+      where: {
+        userId,
+      },
+
+      include: {
+        universidad: {
+          include: {
+            carreras: true,
+            escalas: true,
+            logos: true,
+          },
+        },
+      },
+
+      orderBy: {
+        fechaAgregado: "desc",
+      },
+    });
+
+    const universidades = favoritos.map((favorito) => ({
+      id: favorito.universidad.id,
+      nombre: favorito.universidad.nombre,
+      tipo: favorito.universidad.tipo,
+      ubicacion: favorito.universidad.ubicacion,
+      costoMatricula: favorito.universidad.costoMatricula,
+      webOficial: favorito.universidad.webOficial,
+
+      logo: favorito.universidad.logos[0]?.url || "",
+
+      carreras: favorito.universidad.carreras,
+      escalas: favorito.universidad.escalas,
+
+      fechaAgregado: favorito.fechaAgregado,
+    }));
+
+    return res.json({
+      ok: true,
+      data: universidades,
+    });
+  } catch (error) {
+    console.error("Error obteniendo favoritos del usuario:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudieron obtener las universidades favoritas.",
+    });
+  }
+});
+
+app.post("/api/db/users/:userId/favoritos/:universidadId", async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+    const universidadId = Number(req.params.universidadId);
+
+    if (
+      !Number.isInteger(userId) ||
+      !Number.isInteger(universidadId) ||
+      userId <= 0 ||
+      universidadId <= 0
+    ) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El usuario o la universidad no son válidos.",
+      });
+    }
+
+    const [usuario, universidad] = await Promise.all([
+      prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          id: true,
+        },
+      }),
+
+      prisma.universidad.findUnique({
+        where: {
+          id: universidadId,
+        },
+
+        include: {
+          carreras: true,
+          escalas: true,
+          logos: true,
+        },
+      }),
+    ]);
+
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "El usuario no existe.",
+      });
+    }
+
+    if (!universidad) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "La universidad no existe.",
+      });
+    }
+
+    /*
+     * El upsert evita favoritos duplicados.
+     * La clave compuesta proviene de:
+     * @@id([userId, universidadId])
+     */
+    const favorito = await prisma.universidadUser.upsert({
+      where: {
+        userId_universidadId: {
+          userId,
+          universidadId,
+        },
+      },
+
+      update: {},
+
+      create: {
+        userId,
+        universidadId,
+      },
+    });
+
+    return res.status(201).json({
+      ok: true,
+      mensaje: "Universidad agregada a favoritos.",
+
+      data: {
+        id: universidad.id,
+        nombre: universidad.nombre,
+        tipo: universidad.tipo,
+        ubicacion: universidad.ubicacion,
+        costoMatricula: universidad.costoMatricula,
+        webOficial: universidad.webOficial,
+        logo: universidad.logos[0]?.url || "",
+        carreras: universidad.carreras,
+        escalas: universidad.escalas,
+        fechaAgregado: favorito.fechaAgregado,
+      },
+    });
+  } catch (error) {
+    console.error("Error agregando universidad a favoritos:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo agregar la universidad a favoritos.",
+    });
+  }
+});
+
+app.delete(
+  "/api/db/users/:userId/favoritos/:universidadId",
+  async (req, res) => {
+    try {
+      const userId = Number(req.params.userId);
+      const universidadId = Number(req.params.universidadId);
+
+      if (
+        !Number.isInteger(userId) ||
+        !Number.isInteger(universidadId) ||
+        userId <= 0 ||
+        universidadId <= 0
+      ) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "El usuario o la universidad no son válidos.",
+        });
+      }
+
+      await prisma.universidadUser.deleteMany({
+        where: {
+          userId,
+          universidadId,
+        },
+      });
+
+      return res.json({
+        ok: true,
+        mensaje: "Universidad eliminada de favoritos.",
+      });
+    } catch (error) {
+      console.error("Error eliminando universidad de favoritos:", error);
+
+      return res.status(500).json({
+        ok: false,
+        mensaje: "No se pudo eliminar la universidad de favoritos.",
+      });
+    }
+  },
+);
+
 //////////////////////////////
 app.get("/api/db/historial-tests", async (req, res) => {
   try {
@@ -1032,6 +1671,142 @@ app.get("/api/db/historial-tests", async (req, res) => {
   }
 });
 //////////////////////////////
+
+app.get("/api/db/users/:userId/historial", async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID del usuario no es válido.",
+      });
+    }
+
+    const usuario = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "El usuario no existe.",
+      });
+    }
+
+    const historial = await prisma.historialTest.findMany({
+      where: {
+        userId,
+      },
+
+      orderBy: [
+        {
+          fecha: "desc",
+        },
+        {
+          id: "desc",
+        },
+      ],
+
+      take: 20,
+    });
+
+    return res.json({
+      ok: true,
+      data: historial,
+    });
+  } catch (error) {
+    console.error("Error obteniendo historial del usuario:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo obtener el historial de tests.",
+    });
+  }
+});
+
+app.post("/api/db/users/:userId/historial", async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+    const resultado = String(req.body.resultado || "").trim();
+
+    if (!Number.isInteger(userId) || userId <= 0) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID del usuario no es válido.",
+      });
+    }
+
+    if (!resultado) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El resultado del test es obligatorio.",
+      });
+    }
+
+    const usuario = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        activo: true,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "El usuario no existe.",
+      });
+    }
+
+    if (!usuario.activo) {
+      return res.status(403).json({
+        ok: false,
+        mensaje: "La cuenta del usuario está desactivada.",
+      });
+    }
+
+    const historialCreado = await prisma.$transaction(async (tx) => {
+      const nuevoHistorial = await tx.historialTest.create({
+        data: {
+          userId,
+          resultado,
+        },
+      });
+
+      await tx.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          carreraRecomendada: resultado,
+        },
+      });
+
+      return nuevoHistorial;
+    });
+
+    return res.status(201).json({
+      ok: true,
+      mensaje: "Resultado guardado correctamente.",
+      data: historialCreado,
+    });
+  } catch (error) {
+    console.error("Error guardando resultado del test:", error);
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo guardar el resultado del test.",
+    });
+  }
+});
 
 app.use((req, res) => {
   res.status(404).json({ ok: false, mensaje: "Ruta no encontrada." });
