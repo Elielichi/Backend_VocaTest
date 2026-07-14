@@ -1,50 +1,12 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
+
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-model Carrera {
-  id             Int         @id @default(autoincrement())
-  universidad_id Int
-  nombre         String
-  facultad       String?
-  duracion       String?
-  creditos       Int?
-  descripcion    String?
-  planEstudios   String?
-  Universidad    Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
-}
-
-model Escala {
-  id             Int         @id @default(autoincrement())
-  universidad_id Int
-  escala         String
-  rango          String?
-  Universidad    Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
-}
-
-model Logo {
-  id             Int         @id @default(autoincrement())
-  universidad_id Int
-  url            String
-  descripcion    String?
-  Universidad    Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
-}
-
-model Universidad {
-  id             Int       @id @default(autoincrement())
-  nombre         String
-  tipo           String
-  ubicacion      String?
-  costoMatricula String?
-  webOficial     String?
-  Carrera        Carrera[]
-  Escala         Escala[]
-  Logo           Logo[]
 }
 
 model User {
@@ -54,14 +16,83 @@ model User {
   correo             String  @unique
   contrasena         String
   rol                String  @default("Estudiante")
-  activo             Boolean @default(true)
-  carreraRecomendada String?
   ciudad             String?
+  tipoColegio        String?
+  telefono           String?
   edad               Int?
+  sexo               String?
+  carreraRecomendada String?
+  ultimoIngreso      String?
+  activo             Boolean @default(true)
   especialidad       String?
   gradoAcademico     String?
-  sexo               String?
-  telefono           String?
-  tipoColegio        String?
-  ultimoIngreso      String?
+
+  universidadesFavoritas UniversidadUser[]
+  historialTests         HistorialTest[]
+}
+
+model Universidad {
+  id             Int     @id @default(autoincrement())
+  nombre         String
+  tipo           String
+  ubicacion      String?
+  costoMatricula String?
+  webOficial     String?
+
+  carreras Carrera[]
+  escalas  Escala[]
+  logos    Logo[]
+
+  usuariosFavoritos UniversidadUser[]
+}
+
+model Carrera {
+  id             Int     @id @default(autoincrement())
+  universidad_id Int
+  nombre         String
+  facultad       String?
+  duracion       String?
+  creditos       Int?
+  descripcion    String?
+  planEstudios   String?
+
+  universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Escala {
+  id             Int     @id @default(autoincrement())
+  universidad_id Int
+  escala         String
+  rango          String?
+
+  universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model Logo {
+  id             Int     @id @default(autoincrement())
+  universidad_id Int
+  url            String
+  descripcion    String?
+
+  universidad Universidad @relation(fields: [universidad_id], references: [id], onDelete: Cascade)
+}
+
+model UniversidadUser {
+  userId        Int
+  universidadId Int
+  fechaAgregado DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  universidad Universidad @relation(fields: [universidadId], references: [id], onDelete: Cascade)
+
+  @@id([userId, universidadId])
+}
+
+model HistorialTest {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  resultado String
+  fecha     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

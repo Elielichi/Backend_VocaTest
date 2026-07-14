@@ -1,0 +1,25 @@
+GET http://localhost:3000/api/db/users
+
+###
+
+GET http://localhost:3000/api/db/universidades
+
+### 
+
+GET http://localhost:3000/api/db/carreras
+
+### 
+
+GET http://localhost:3000/api/db/escalas
+
+###
+
+GET http://localhost:3000/api/db/logos
+
+###
+
+GET http://localhost:3000/api/db/universidad-users
+
+###
+
+GET http://localhost:3000/api/db/historial-tests
