@@ -400,7 +400,7 @@ app.post("/api/auth/login", async (req, res) => {
       .trim()
       .toLowerCase();
 
-    const contrasena = getPassword(req.body);
+    const contrasena = String(req.body.contrasena || "").trim();
 
     if (!correo || !contrasena) {
       return res.status(400).json({
@@ -418,7 +418,7 @@ app.post("/api/auth/login", async (req, res) => {
     if (!usuario || usuario.contrasena !== contrasena) {
       return res.status(401).json({
         ok: false,
-        mensaje: "Credenciales incorrectas.",
+        mensaje: "Correo o contraseña incorrectos.",
       });
     }
 
@@ -429,29 +429,33 @@ app.post("/api/auth/login", async (req, res) => {
       });
     }
 
+    const fechaIngreso = new Date().toLocaleString("es-PE", {
+      timeZone: "America/Lima",
+    });
+
     const usuarioActualizado = await prisma.user.update({
       where: {
         id: usuario.id,
       },
       data: {
-        ultimoIngreso: new Date().toLocaleDateString("es-PE"),
+        ultimoIngreso: fechaIngreso,
       },
     });
 
-    const { contrasena: _, ...usuarioSinContrasena } = usuarioActualizado;
+    const { contrasena: passwordEliminado, ...usuarioSinContrasena } =
+      usuarioActualizado;
 
-    return res.json({
+    return res.status(200).json({
       ok: true,
+      mensaje: "Inicio de sesión exitoso.",
       data: usuarioSinContrasena,
-      rol: usuarioActualizado.rol,
     });
   } catch (error) {
     console.error("Error iniciando sesión:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: "No se pudo iniciar sesión.",
-      error: error.message,
+      mensaje: "Ocurrió un error al iniciar sesión.",
     });
   }
 });
@@ -460,17 +464,83 @@ app.post("/api/auth/login", async (req, res) => {
 /////////////////////
 app.post("/api/auth/register", async (req, res) => {
   try {
+    const nombres = String(req.body.nombres || "").trim();
+    const apellidos = String(req.body.apellidos || "").trim();
+
     const correo = String(req.body.correo || "")
       .trim()
       .toLowerCase();
 
-    const contrasena = getPassword(req.body);
+    const contrasena = String(getPassword(req.body) || "").trim();
 
-    if (!req.body.nombres || !req.body.apellidos || !correo || !contrasena) {
+    if (!nombres || !apellidos || !correo || !contrasena) {
       return res.status(400).json({
         ok: false,
         mensaje: "Nombres, apellidos, correo y contraseña son obligatorios.",
       });
+    }
+
+    const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+
+    if (!regexNombre.test(nombres)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Los nombres solo pueden contener letras.",
+      });
+    }
+
+    if (!regexNombre.test(apellidos)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Los apellidos solo pueden contener letras.",
+      });
+    }
+
+    const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!regexCorreo.test(correo)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El correo electrónico no es válido.",
+      });
+    }
+
+    const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (!regexPassword.test(contrasena)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje:
+          "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.",
+      });
+    }
+
+    const telefono = req.body.telefono
+      ? String(req.body.telefono).trim()
+      : null;
+
+    if (telefono && !/^9\d{8}$/.test(telefono)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El teléfono debe comenzar con 9 y tener 9 dígitos.",
+      });
+    }
+
+    let edad = null;
+
+    if (
+      req.body.edad !== undefined &&
+      req.body.edad !== null &&
+      req.body.edad !== ""
+    ) {
+      edad = Number(req.body.edad);
+
+      if (!Number.isInteger(edad) || edad < 15 || edad > 80) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "La edad debe ser un número entero entre 15 y 80.",
+        });
+      }
     }
 
     const usuarioExistente = await prisma.user.findUnique({
@@ -488,29 +558,61 @@ app.post("/api/auth/register", async (req, res) => {
 
     const nuevoUsuario = await prisma.user.create({
       data: {
-        nombres: String(req.body.nombres).trim(),
-        apellidos: String(req.body.apellidos).trim(),
+        nombres,
+        apellidos,
         correo,
         contrasena,
         rol: normalizeRole(req.body.rol),
+
+        ciudad: req.body.ciudad ? String(req.body.ciudad).trim() : null,
+
+        telefono,
+        edad,
+
+        sexo: req.body.sexo ? String(req.body.sexo).trim() : null,
+
+        tipoColegio: req.body.tipoColegio
+          ? String(req.body.tipoColegio).trim()
+          : null,
+
+        carreraRecomendada: req.body.carreraRecomendada
+          ? String(req.body.carreraRecomendada).trim()
+          : null,
+
+        especialidad: req.body.especialidad
+          ? String(req.body.especialidad).trim()
+          : null,
+
+        gradoAcademico: req.body.gradoAcademico
+          ? String(req.body.gradoAcademico).trim()
+          : null,
+
+        activo: true,
       },
     });
 
-    const { contrasena: _, ...usuarioSinContrasena } = nuevoUsuario;
+    const { contrasena: contrasenaEliminada, ...usuarioSinContrasena } =
+      nuevoUsuario;
 
     return res.status(201).json({
       ok: true,
+      mensaje: "Usuario registrado correctamente.",
       data: usuarioSinContrasena,
       rol: nuevoUsuario.rol,
     });
-    
   } catch (error) {
     console.error("Error registrando usuario:", error);
+
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        ok: false,
+        mensaje: "Este correo ya está registrado.",
+      });
+    }
 
     return res.status(500).json({
       ok: false,
       mensaje: "No se pudo registrar al usuario.",
-      error: error.message,
     });
   }
 });
@@ -580,6 +682,173 @@ app.get("/api/db/universidades", async (req, res) => {
   }
 });
 //////////////////////////////
+
+app.put("/api/db/users/:id/profile", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "El ID del usuario no es válido.",
+      });
+    }
+
+    const passwordActual = String(req.body.passwordActual || "");
+
+    if (!passwordActual) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "Debes ingresar tu contraseña actual.",
+      });
+    }
+
+    const usuario = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: "El usuario no existe.",
+      });
+    }
+
+    if (usuario.contrasena !== passwordActual) {
+      return res.status(401).json({
+        ok: false,
+        mensaje: "La contraseña actual es incorrecta.",
+      });
+    }
+
+    const dataToUpdate = {};
+
+    if (req.body.nombres !== undefined || req.body.apellidos !== undefined) {
+      const nombres = String(req.body.nombres ?? usuario.nombres).trim();
+
+      const apellidos = String(req.body.apellidos ?? usuario.apellidos).trim();
+
+      const regexNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+
+      if (!nombres || !regexNombre.test(nombres)) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "Los nombres solo pueden contener letras.",
+        });
+      }
+
+      if (!apellidos || !regexNombre.test(apellidos)) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "Los apellidos solo pueden contener letras.",
+        });
+      }
+
+      dataToUpdate.nombres = nombres;
+      dataToUpdate.apellidos = apellidos;
+    }
+
+    if (req.body.correo !== undefined) {
+      const correo = String(req.body.correo).trim().toLowerCase();
+
+      const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!regexCorreo.test(correo)) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "El correo electrónico no es válido.",
+        });
+      }
+
+      if (correo === usuario.correo) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "El nuevo correo debe ser diferente al actual.",
+        });
+      }
+
+      const correoRegistrado = await prisma.user.findFirst({
+        where: {
+          correo,
+          NOT: {
+            id,
+          },
+        },
+      });
+
+      if (correoRegistrado) {
+        return res.status(409).json({
+          ok: false,
+          mensaje: "Ese correo ya está registrado.",
+        });
+      }
+
+      dataToUpdate.correo = correo;
+    }
+
+    if (req.body.nuevaContrasena !== undefined) {
+      const nuevaContrasena = String(req.body.nuevaContrasena);
+
+      const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+      if (!regexPassword.test(nuevaContrasena)) {
+        return res.status(400).json({
+          ok: false,
+          mensaje:
+            "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.",
+        });
+      }
+
+      if (nuevaContrasena === usuario.contrasena) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: "La nueva contraseña debe ser diferente a la actual.",
+        });
+      }
+
+      dataToUpdate.contrasena = nuevaContrasena;
+    }
+
+    if (Object.keys(dataToUpdate).length === 0) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: "No se enviaron cambios.",
+      });
+    }
+
+    const usuarioActualizado = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: dataToUpdate,
+    });
+
+    const { contrasena: contrasenaEliminada, ...usuarioSinContrasena } =
+      usuarioActualizado;
+
+    return res.json({
+      ok: true,
+      mensaje: "Perfil actualizado correctamente.",
+      data: usuarioSinContrasena,
+    });
+  } catch (error) {
+    console.error("Error actualizando el perfil:", error);
+
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        ok: false,
+        mensaje: "Ese correo ya está registrado.",
+      });
+    }
+
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo actualizar el perfil.",
+    });
+  }
+});
 
 //////////////////////////////
 app.put("/api/db/users/:id", async (req, res) => {
