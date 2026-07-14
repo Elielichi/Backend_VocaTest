@@ -1,0 +1,48 @@
+@api = http://127.0.0.1:3000
+@token = REEMPLAZAR_CON_TOKEN_DE_LOGIN
+@roomCode = REEMPLAZAR_CON_CODIGO
+
+### Estado de API y PostgreSQL
+GET {{api}}/api/health
+
+### Login
+POST {{api}}/api/auth/login
+Content-Type: application/json
+
+{
+  "correo": "admin@vocatest.pe",
+  "contrasena": "REEMPLAZAR"
+}
+
+### Universidades públicas
+GET {{api}}/api/db/universidades
+
+### Preguntas dinámicas
+GET {{api}}/api/db/test
+
+### Usuarios (administrador)
+GET {{api}}/api/db/users
+Authorization: Bearer {{token}}
+
+### Salas del administrador/profesor
+GET {{api}}/api/db/salas
+Authorization: Bearer {{token}}
+
+### Crear sala
+POST {{api}}/api/db/salas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Evaluación 2026-1",
+  "pin": "4826"
+}
+
+### Cerrar sala
+PATCH {{api}}/api/db/salas/{{roomCode}}/estado
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "activa": false
+}

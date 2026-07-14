@@ -29,9 +29,15 @@ model User {
   activo             Boolean @default(true)
   especialidad       String?
   gradoAcademico     String?
+  notificacionesEmail Boolean @default(true)
+  recordatorios        Boolean @default(true)
+  perfilPublico        Boolean @default(true)
 
   universidadesFavoritas UniversidadUser[]
   historialTests         HistorialTest[]
+  favoritos              Favorito[]
+  salasCreadas           Sala[]            @relation("CreadorSala")
+  resultadosSala         ResultadoSala[]
 }
 
 model Universidad {
@@ -47,6 +53,7 @@ model Universidad {
   logos    Logo[]
 
   usuariosFavoritos UniversidadUser[]
+  favoritos        Favorito[]
 }
 
 model Carrera {
@@ -98,4 +105,62 @@ model HistorialTest {
   fecha     DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Favorito {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  universidadId Int
+  fecha         DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  universidad Universidad @relation(fields: [universidadId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, universidadId])
+}
+
+model Sala {
+  id        Int       @id @default(autoincrement())
+  nombre    String
+  codigo    String    @unique
+  pinHash   String
+  activa    Boolean   @default(true)
+  creadoEn  DateTime  @default(now())
+  cerradoEn DateTime?
+  creadorId Int
+
+  creador    User            @relation("CreadorSala", fields: [creadorId], references: [id], onDelete: Cascade)
+  resultados ResultadoSala[]
+
+  @@index([creadorId])
+  @@index([activa])
+}
+
+model ResultadoSala {
+  id        Int      @id @default(autoincrement())
+  salaId    Int
+  userId    Int
+  resultado String
+  fecha     DateTime @default(now())
+
+  sala Sala @relation(fields: [salaId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([salaId, userId])
+  @@index([salaId])
+  @@index([userId])
+}
+
+model PreguntaTest {
+  id       Int     @id @default(autoincrement())
+  orden    Int     @unique
+  pregunta String
+  bloque   String
+  opciones Json
+  activa   Boolean @default(true)
+}
+
+model AreaVocacional {
+  codigo             String @id
+  carreraRecomendada String
 }

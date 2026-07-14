@@ -5,8 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node --check index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node --test tests/security.test.js",
+    "check": "node --check index.js && node --check src/app.js && node --check src/routes/auth.routes.js && node --check src/routes/users.routes.js && node --check src/routes/universidades.routes.js && node --check src/routes/salas.routes.js && node --check src/routes/test.routes.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed-test": "node seed-vocational.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
