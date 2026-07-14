@@ -1,4 +1,5 @@
 import express from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import fs from 'fs';
@@ -700,6 +701,82 @@ app.get('/api/db/historial-tests', async (req, res) => {
 });
 //////////////////////////////
 
+//////////////////////////////
+// Agregar a favoritos
+app.post("/api/db/favoritos", async (req, res) => {
+  try {
+    const { userId, universidadId } = req.body;
+
+    if (!userId || !universidadId) {
+      return res.status(400).json({ ok: false, mensaje: "userId y universidadId son obligatorios." });
+    }
+
+    const nuevoFavorito = await prisma.universidadUser.create({
+      data: { userId: Number(userId), universidadId: Number(universidadId) },
+    });
+
+    return res.status(201).json({ ok: true, data: nuevoFavorito });
+  } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(409).json({ ok: false, mensaje: "Ya está en favoritos." });
+    }
+    console.error("Error agregando favorito:", error);
+    return res.status(500).json({ ok: false, mensaje: "No se pudo agregar el favorito.", error: error.message });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+// Quitar de favoritos
+app.delete("/api/db/favoritos", async (req, res) => {
+  try {
+    const { userId, universidadId } = req.body;
+
+    if (!userId || !universidadId) {
+      return res.status(400).json({ ok: false, mensaje: "userId y universidadId son obligatorios." });
+    }
+
+    await prisma.universidadUser.delete({
+      where: {
+        userId_universidadId: {
+          userId: Number(userId),
+          universidadId: Number(universidadId),
+        },
+      },
+    });
+
+    return res.json({ ok: true, mensaje: "Favorito eliminado." });
+  } catch (error) {
+    if (error.code === "P2025") {
+      return res.status(404).json({ ok: false, mensaje: "El favorito no existe." });
+    }
+    console.error("Error eliminando favorito:", error);
+    return res.status(500).json({ ok: false, mensaje: "No se pudo eliminar el favorito.", error: error.message });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+// Listar favoritos de un usuario con datos completos de la universidad
+app.get("/api/db/favoritos/usuario/:userId", async (req, res) => {
+  try {
+    const favoritos = await prisma.universidadUser.findMany({
+      where: { userId: Number(req.params.userId) },
+      include: {
+        universidad: {
+          include: { logos: true },
+        },
+      },
+      orderBy: { fechaAgregado: "desc" },
+    });
+
+    return res.json({ ok: true, data: favoritos });
+  } catch (error) {
+    console.error("Error obteniendo favoritos:", error);
+    return res.status(500).json({ ok: false, mensaje: "No se pudieron obtener los favoritos.", error: error.message });
+  }
+});
+//////////////////////////////
 app.use((req, res) => {
   res.status(404).json({ ok: false, mensaje: 'Ruta no encontrada.' });
 });
@@ -707,4 +784,3 @@ app.use((req, res) => {
 // PARA RENDER MEJOR SERIA ESTO:
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor backend corriendo en el puerto ${PORT}`);
-});
