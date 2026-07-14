@@ -1,35 +1,36 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import fs from 'fs';
-import path from 'path';
-import vm from 'vm';
-import { fileURLToPath } from 'url';
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import fs from "fs";
+import path from "path";
+import vm from "vm";
+import { fileURLToPath } from "url";
 
-import { PrismaClient } from './generated/prisma/index.js';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
-import 'dotenv/config';
+import { PrismaClient } from "./generated/prisma/index.js";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+import "dotenv/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_PATH = path.join(__dirname, 'data', 'db.json');
+
+const DB_PATH = path.join(__dirname, "data", "db.json");
 const FRONTEND_UNIVERSIDADES_PATH = path.join(
   __dirname,
-  '..',
-  'PROYECTO-PROGRA.-WEB-2026-1',
-  'src',
-  'data',
-  'universidades.js'
+  "..",
+  "PROYECTO-PROGRA.-WEB-2026-1",
+  "src",
+  "data",
+  "universidades.js",
 );
 
 const ROLES = {
-  estudiantes: 'Estudiante',
-  profesores: 'Profesor',
-  administradores: 'Administrador'
+  estudiantes: "Estudiante",
+  profesores: "Profesor",
+  administradores: "Administrador",
 };
 
 app.use(cors());
@@ -53,7 +54,7 @@ const prisma = new PrismaClient({
 
 function readJson(filePath, fallback) {
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch {
     return fallback;
   }
@@ -67,11 +68,15 @@ function writeJson(filePath, data) {
 function normalizeRole(role = ROLES.estudiantes) {
   const cleanRole = String(role).trim().toLowerCase();
 
-  if (cleanRole === 'admin' || cleanRole === 'administrador' || cleanRole === 'administradores') {
+  if (
+    cleanRole === "admin" ||
+    cleanRole === "administrador" ||
+    cleanRole === "administradores"
+  ) {
     return ROLES.administradores;
   }
 
-  if (cleanRole === 'profesor' || cleanRole === 'profesores') {
+  if (cleanRole === "profesor" || cleanRole === "profesores") {
     return ROLES.profesores;
   }
 
@@ -79,7 +84,7 @@ function normalizeRole(role = ROLES.estudiantes) {
 }
 
 function getPassword(user) {
-  return user.contrasena || user['contraseña'] || user.password;
+  return user.contrasena || user["contraseña"] || user.password;
 }
 
 function loadFrontendUniversidades() {
@@ -88,9 +93,9 @@ function loadFrontendUniversidades() {
   }
 
   const source = fs
-    .readFileSync(FRONTEND_UNIVERSIDADES_PATH, 'utf8')
-    .replace('const universidades =', 'universidades =')
-    .replace(/export default universidades;?\s*$/, '');
+    .readFileSync(FRONTEND_UNIVERSIDADES_PATH, "utf8")
+    .replace("const universidades =", "universidades =")
+    .replace(/export default universidades;?\s*$/, "");
 
   const sandbox = { universidades: [] };
   vm.createContext(sandbox);
@@ -99,20 +104,22 @@ function loadFrontendUniversidades() {
 }
 
 function buildInitialDatabase() {
-  const universidades = loadFrontendUniversidades().map((universidad, index) => ({
-    id: universidad.id || index + 1,
-    nombre: universidad.nombre,
-    tipo: universidad.tipo,
-    ubicacion: universidad.ubicacion,
-    costoMatricula: universidad.costoMatricula,
-    webOficial: universidad.webOficial
-  }));
+  const universidades = loadFrontendUniversidades().map(
+    (universidad, index) => ({
+      id: universidad.id || index + 1,
+      nombre: universidad.nombre,
+      tipo: universidad.tipo,
+      ubicacion: universidad.ubicacion,
+      costoMatricula: universidad.costoMatricula,
+      webOficial: universidad.webOficial,
+    }),
+  );
 
   const logos = loadFrontendUniversidades().map((universidad, index) => ({
     id: index + 1,
     universidad_id: universidad.id || index + 1,
-    url: universidad.logo || '',
-    descripcion: `Logo de ${universidad.nombre}`
+    url: universidad.logo || "",
+    descripcion: `Logo de ${universidad.nombre}`,
   }));
 
   const carreras = [];
@@ -130,7 +137,7 @@ function buildInitialDatabase() {
         duracion: carrera.duracion,
         creditos: carrera.creditos,
         descripcion: carrera.descripcion,
-        planEstudios: carrera.planEstudios
+        planEstudios: carrera.planEstudios,
       });
     });
 
@@ -139,7 +146,7 @@ function buildInitialDatabase() {
         id: escalas.length + 1,
         universidad_id: universidadId,
         escala: escala.escala,
-        rango: escala.rango
+        rango: escala.rango,
       });
     });
   });
@@ -152,47 +159,47 @@ function buildInitialDatabase() {
     users: [
       {
         id: 1,
-        nombres: 'Carlos',
-        apellidos: 'Mendoza Torres',
-        correo: 'estudiante@ulima.edu.pe',
-        contrasena: 'ulima123',
+        nombres: "Carlos",
+        apellidos: "Mendoza Torres",
+        correo: "estudiante@ulima.edu.pe",
+        contrasena: "ulima123",
         rol: ROLES.estudiantes,
-        ciudad: 'Lima',
-        tipoColegio: 'Privado',
-        telefono: '987654321',
+        ciudad: "Lima",
+        tipoColegio: "Privado",
+        telefono: "987654321",
         edad: 18,
-        sexo: 'Masculino',
-        carreraRecomendada: 'Ingenieria de Sistemas y Computacion',
+        sexo: "Masculino",
+        carreraRecomendada: "Ingenieria de Sistemas y Computacion",
         ultimoIngreso: null,
-        activo: true
+        activo: true,
       },
       {
         id: 2,
-        nombres: 'Maria',
-        apellidos: 'Garcia Lopez',
-        correo: 'profesor@ulima.edu.pe',
-        contrasena: 'profe123',
+        nombres: "Maria",
+        apellidos: "Garcia Lopez",
+        correo: "profesor@ulima.edu.pe",
+        contrasena: "profe123",
         rol: ROLES.profesores,
-        ciudad: 'Lima',
-        telefono: '999123456',
+        ciudad: "Lima",
+        telefono: "999123456",
         edad: 38,
-        sexo: 'Femenino',
-        especialidad: 'Ingenieria de Sistemas',
-        gradoAcademico: 'Magister en Ingenieria de Software',
-        activo: true
+        sexo: "Femenino",
+        especialidad: "Ingenieria de Sistemas",
+        gradoAcademico: "Magister en Ingenieria de Software",
+        activo: true,
       },
       {
         id: 3,
-        nombres: 'Admin',
-        apellidos: 'VocaTest',
-        correo: 'admin@vocatest.pe',
-        contrasena: 'admin123',
+        nombres: "Admin",
+        apellidos: "VocaTest",
+        correo: "admin@vocatest.pe",
+        contrasena: "admin123",
         rol: ROLES.administradores,
-        ciudad: 'Lima',
-        activo: true
-      }
+        ciudad: "Lima",
+        activo: true,
+      },
     ],
-    universidad_users: []
+    universidad_users: [],
   };
 }
 
@@ -209,11 +216,15 @@ function saveDb(db) {
 }
 
 function nextId(items) {
-  return items.length ? Math.max(...items.map((item) => Number(item.id) || 0)) + 1 : 1;
+  return items.length
+    ? Math.max(...items.map((item) => Number(item.id) || 0)) + 1
+    : 1;
 }
 
 function sendNotFound(res, entity) {
-  return res.status(404).json({ ok: false, mensaje: `${entity} no encontrado.` });
+  return res
+    .status(404)
+    .json({ ok: false, mensaje: `${entity} no encontrado.` });
 }
 
 function createCrudRoutes(entityName) {
@@ -224,7 +235,9 @@ function createCrudRoutes(entityName) {
 
   app.get(`/api/${entityName}/:id`, (req, res) => {
     const db = getDb();
-    const item = db[entityName].find((record) => String(record.id) === req.params.id);
+    const item = db[entityName].find(
+      (record) => String(record.id) === req.params.id,
+    );
 
     if (!item) return sendNotFound(res, entityName);
     return res.json({ ok: true, data: item });
@@ -240,33 +253,61 @@ function createCrudRoutes(entityName) {
 
   app.put(`/api/${entityName}/:id`, (req, res) => {
     const db = getDb();
-    const index = db[entityName].findIndex((record) => String(record.id) === req.params.id);
+    const index = db[entityName].findIndex(
+      (record) => String(record.id) === req.params.id,
+    );
 
     if (index === -1) return sendNotFound(res, entityName);
 
-    db[entityName][index] = { ...db[entityName][index], ...req.body, id: db[entityName][index].id };
+    db[entityName][index] = {
+      ...db[entityName][index],
+      ...req.body,
+      id: db[entityName][index].id,
+    };
     saveDb(db);
     return res.json({ ok: true, data: db[entityName][index] });
   });
 
   app.delete(`/api/${entityName}/:id`, (req, res) => {
     const db = getDb();
-    const exists = db[entityName].some((record) => String(record.id) === req.params.id);
+    const exists = db[entityName].some(
+      (record) => String(record.id) === req.params.id,
+    );
 
     if (!exists) return sendNotFound(res, entityName);
 
-    db[entityName] = db[entityName].filter((record) => String(record.id) !== req.params.id);
+    db[entityName] = db[entityName].filter(
+      (record) => String(record.id) !== req.params.id,
+    );
     saveDb(db);
     return res.json({ ok: true, mensaje: `${entityName} eliminado.` });
   });
 }
 
 ////////////
-app.get('/api/db/users', async (req, res) => {
+app.get("/api/db/users", async (req, res) => {
   try {
     const usuarios = await prisma.user.findMany({
+      select: {
+        id: true,
+        nombres: true,
+        apellidos: true,
+        correo: true,
+        rol: true,
+        ciudad: true,
+        tipoColegio: true,
+        telefono: true,
+        edad: true,
+        sexo: true,
+        carreraRecomendada: true,
+        ultimoIngreso: true,
+        activo: true,
+        especialidad: true,
+        gradoAcademico: true,
+      },
+
       orderBy: {
-        id: 'asc',
+        id: "asc",
       },
     });
 
@@ -275,32 +316,25 @@ app.get('/api/db/users', async (req, res) => {
       data: usuarios,
     });
   } catch (error) {
-    console.error('Error obteniendo usuarios desde PostgreSQL:', error);
+    console.error("Error obteniendo usuarios desde PostgreSQL:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: 'No se pudieron obtener los usuarios.',
+      mensaje: "No se pudieron obtener los usuarios.",
     });
   }
 });
 ////////////
 
 ////////////
-app.post('/api/db/users', async (req, res) => {
+app.post("/api/db/users", async (req, res) => {
   try {
-    const {
-      nombres,
-      apellidos,
-      correo,
-      contrasena,
-      rol,
-    } = req.body;
+    const { nombres, apellidos, correo, contrasena, rol } = req.body;
 
     if (!nombres || !apellidos || !correo || !contrasena) {
       return res.status(400).json({
         ok: false,
-        mensaje:
-          'Nombres, apellidos, correo y contraseña son obligatorios.',
+        mensaje: "Nombres, apellidos, correo y contraseña son obligatorios.",
       });
     }
 
@@ -313,7 +347,7 @@ app.post('/api/db/users', async (req, res) => {
     if (usuarioExistente) {
       return res.status(409).json({
         ok: false,
-        mensaje: 'El correo ya está registrado.',
+        mensaje: "El correo ya está registrado.",
       });
     }
 
@@ -323,7 +357,7 @@ app.post('/api/db/users', async (req, res) => {
         apellidos: apellidos.trim(),
         correo: correo.trim().toLowerCase(),
         contrasena,
-        rol: rol || 'Estudiante',
+        rol: rol || "Estudiante",
       },
     });
 
@@ -332,37 +366,37 @@ app.post('/api/db/users', async (req, res) => {
       data: nuevoUsuario,
     });
   } catch (error) {
-    console.error('Error creando usuario:', error);
+    console.error("Error creando usuario:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: 'No se pudo crear el usuario.',
+      mensaje: "No se pudo crear el usuario.",
     });
   }
 });
 ///////////////
 
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     ok: true,
     mensaje: `Backend VocaTest funcionando en el puerto ${PORT}.`,
     endpoints: [
-      '/api/auth/login',
-      '/api/auth/register',
-      '/api/db/users',
-      '/api/db/universidades',
-      '/api/db/carreras',
-      '/api/db/escalas',
-      '/api/db/logos',
-      '/api/universidad_users'
-    ]
+      "/api/auth/login",
+      "/api/auth/register",
+      "/api/db/users",
+      "/api/db/universidades",
+      "/api/db/carreras",
+      "/api/db/escalas",
+      "/api/db/logos",
+      "/api/universidad_users",
+    ],
   });
 });
 
 /////////////////////
-app.post('/api/auth/login', async (req, res) => {
+app.post("/api/auth/login", async (req, res) => {
   try {
-    const correo = String(req.body.correo || '')
+    const correo = String(req.body.correo || "")
       .trim()
       .toLowerCase();
 
@@ -371,72 +405,84 @@ app.post('/api/auth/login', async (req, res) => {
     if (!correo || !contrasena) {
       return res.status(400).json({
         ok: false,
-        mensaje: 'Correo y contraseña son obligatorios.'
+        mensaje: "Correo y contraseña son obligatorios.",
       });
     }
 
     const usuario = await prisma.user.findUnique({
       where: {
-        correo
-      }
+        correo,
+      },
     });
 
     if (!usuario || usuario.contrasena !== contrasena) {
       return res.status(401).json({
         ok: false,
-        mensaje: 'Credenciales incorrectas.'
+        mensaje: "Credenciales incorrectas.",
       });
     }
 
+    if (!usuario.activo) {
+      return res.status(403).json({
+        ok: false,
+        mensaje: "La cuenta se encuentra desactivada.",
+      });
+    }
+
+    const usuarioActualizado = await prisma.user.update({
+      where: {
+        id: usuario.id,
+      },
+      data: {
+        ultimoIngreso: new Date().toLocaleDateString("es-PE"),
+      },
+    });
+
+    const { contrasena: _, ...usuarioSinContrasena } = usuarioActualizado;
+
     return res.json({
       ok: true,
-      data: usuario,
-      rol: usuario.rol
+      data: usuarioSinContrasena,
+      rol: usuarioActualizado.rol,
     });
   } catch (error) {
-    console.error('Error iniciando sesión:', error);
+    console.error("Error iniciando sesión:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: 'No se pudo iniciar sesión.',
-      error: error.message
+      mensaje: "No se pudo iniciar sesión.",
+      error: error.message,
     });
   }
 });
 /////////////////////
 
 /////////////////////
-app.post('/api/auth/register', async (req, res) => {
+app.post("/api/auth/register", async (req, res) => {
   try {
-    const correo = String(req.body.correo || '')
+    const correo = String(req.body.correo || "")
       .trim()
       .toLowerCase();
 
     const contrasena = getPassword(req.body);
 
-    if (
-      !req.body.nombres ||
-      !req.body.apellidos ||
-      !correo ||
-      !contrasena
-    ) {
+    if (!req.body.nombres || !req.body.apellidos || !correo || !contrasena) {
       return res.status(400).json({
         ok: false,
-        mensaje:
-          'Nombres, apellidos, correo y contraseña son obligatorios.'
+        mensaje: "Nombres, apellidos, correo y contraseña son obligatorios.",
       });
     }
 
     const usuarioExistente = await prisma.user.findUnique({
       where: {
-        correo
-      }
+        correo,
+      },
     });
 
     if (usuarioExistente) {
       return res.status(409).json({
         ok: false,
-        mensaje: 'Este correo ya está registrado.'
+        mensaje: "Este correo ya está registrado.",
       });
     }
 
@@ -446,71 +492,81 @@ app.post('/api/auth/register', async (req, res) => {
         apellidos: String(req.body.apellidos).trim(),
         correo,
         contrasena,
-        rol: normalizeRole(req.body.rol)
-      }
+        rol: normalizeRole(req.body.rol),
+      },
     });
+
+    const { contrasena: _, ...usuarioSinContrasena } = nuevoUsuario;
 
     return res.status(201).json({
       ok: true,
-      data: nuevoUsuario
+      data: usuarioSinContrasena,
+      rol: nuevoUsuario.rol,
     });
+    
   } catch (error) {
-    console.error('Error registrando usuario:', error);
+    console.error("Error registrando usuario:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: 'No se pudo registrar al usuario.',
-      error: error.message
+      mensaje: "No se pudo registrar al usuario.",
+      error: error.message,
     });
   }
 });
 /////////////////////
 
-app.get('/api/users/tipo/:tipo', (req, res) => {
+app.get("/api/users/tipo/:tipo", (req, res) => {
   const db = getDb();
   const role = normalizeRole(req.params.tipo);
   const users = db.users.filter((user) => user.rol === role);
   res.json({ ok: true, data: users });
 });
 
-app.get('/api/universidad/:id/full', (req, res) => {
+app.get("/api/universidad/:id/full", (req, res) => {
   const db = getDb();
-  const universidad = db.universidad.find((item) => String(item.id) === req.params.id);
+  const universidad = db.universidad.find(
+    (item) => String(item.id) === req.params.id,
+  );
 
-  if (!universidad) return sendNotFound(res, 'universidad');
+  if (!universidad) return sendNotFound(res, "universidad");
 
   return res.json({
     ok: true,
     data: {
       ...universidad,
-      logo: db.logos.find((logo) => logo.universidad_id === universidad.id) || null,
-      carreras: db.carreras.filter((carrera) => carrera.universidad_id === universidad.id),
-      escalas: db.escalas.filter((escala) => escala.universidad_id === universidad.id)
-    }
+      logo:
+        db.logos.find((logo) => logo.universidad_id === universidad.id) || null,
+      carreras: db.carreras.filter(
+        (carrera) => carrera.universidad_id === universidad.id,
+      ),
+      escalas: db.escalas.filter(
+        (escala) => escala.universidad_id === universidad.id,
+      ),
+    },
   });
 });
 
-createCrudRoutes('universidad');
-createCrudRoutes('carreras');
-createCrudRoutes('escalas');
-createCrudRoutes('logos');
-createCrudRoutes('users');
-createCrudRoutes('universidad_users');
+createCrudRoutes("universidad");
+createCrudRoutes("carreras");
+createCrudRoutes("escalas");
+createCrudRoutes("logos");
+createCrudRoutes("users");
+createCrudRoutes("universidad_users");
 
 //////////////////////////////
 app.get("/api/db/universidades", async (req, res) => {
   try {
-    const universidades =
-      await prisma.universidad.findMany({
-        include: {
-          carreras: true,
-          escalas: true,
-          logos: true,
-        },
-        orderBy: {
-          id: "asc",
-        },
-      });
+    const universidades = await prisma.universidad.findMany({
+      include: {
+        carreras: true,
+        escalas: true,
+        logos: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
 
     return res.json({
       ok: true,
@@ -545,7 +601,11 @@ app.put("/api/db/users/:id", async (req, res) => {
     return res.json({ ok: true, data: usuarioActualizado });
   } catch (error) {
     console.error("Error actualizando usuario:", error);
-    return res.status(500).json({ ok: false, mensaje: "No se pudo actualizar el usuario.", error: error.message });
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo actualizar el usuario.",
+      error: error.message,
+    });
   }
 });
 //////////////////////////////
@@ -557,7 +617,11 @@ app.delete("/api/db/users/:id", async (req, res) => {
     return res.json({ ok: true, mensaje: "Usuario eliminado." });
   } catch (error) {
     console.error("Error eliminando usuario:", error);
-    return res.status(500).json({ ok: false, mensaje: "No se pudo eliminar el usuario.", error: error.message });
+    return res.status(500).json({
+      ok: false,
+      mensaje: "No se pudo eliminar el usuario.",
+      error: error.message,
+    });
   }
 });
 //////////////////////////////
@@ -644,67 +708,67 @@ app.get("/api/db/logos", async (req, res) => {
 //////////////////////////////
 
 //////////////////////////////
-app.get('/api/db/universidad-users', async (req, res) => {
+app.get("/api/db/universidad-users", async (req, res) => {
   try {
     const favoritos = await prisma.universidadUser.findMany({
       include: {
         user: true,
-        universidad: true
+        universidad: true,
       },
       orderBy: {
-        fechaAgregado: 'desc'
-      }
+        fechaAgregado: "desc",
+      },
     });
 
     return res.json({
       ok: true,
-      data: favoritos
+      data: favoritos,
     });
   } catch (error) {
-    console.error('Error obteniendo universidades favoritas:', error);
+    console.error("Error obteniendo universidades favoritas:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: 'No se pudieron obtener las universidades favoritas.',
-      error: error.message
+      mensaje: "No se pudieron obtener las universidades favoritas.",
+      error: error.message,
     });
   }
 });
 //////////////////////////////
 
 //////////////////////////////
-app.get('/api/db/historial-tests', async (req, res) => {
+app.get("/api/db/historial-tests", async (req, res) => {
   try {
     const historial = await prisma.historialTest.findMany({
       include: {
-        user: true
+        user: true,
       },
       orderBy: {
-        fecha: 'desc'
-      }
+        fecha: "desc",
+      },
     });
 
     return res.json({
       ok: true,
-      data: historial
+      data: historial,
     });
   } catch (error) {
-    console.error('Error obteniendo historial de tests:', error);
+    console.error("Error obteniendo historial de tests:", error);
 
     return res.status(500).json({
       ok: false,
-      mensaje: 'No se pudo obtener el historial de tests.',
-      error: error.message
+      mensaje: "No se pudo obtener el historial de tests.",
+      error: error.message,
     });
   }
 });
 //////////////////////////////
 
 app.use((req, res) => {
-  res.status(404).json({ ok: false, mensaje: 'Ruta no encontrada.' });
+  res.status(404).json({ ok: false, mensaje: "Ruta no encontrada." });
 });
 
 // PARA RENDER MEJOR SERIA ESTO:
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor backend corriendo en el puerto ${PORT}`);
 });
