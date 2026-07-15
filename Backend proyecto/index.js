@@ -673,11 +673,70 @@ app.get('/api/db/universidad-users', async (req, res) => {
 //////////////////////////////
 
 //////////////////////////////
+//////////////////////////////
+// Guardar un nuevo resultado del test vocacional
+app.post('/api/db/historial-test', async (req, res) => {
+  try {
+    const { userId, resultado } = req.body;
+
+    if (!userId || !resultado) {
+      return res.status(400).json({
+        ok: false,
+        mensaje: 'userId y resultado son obligatorios.'
+      });
+    }
+
+    const usuarioExiste = await prisma.user.findUnique({
+      where: { id: Number(userId) }
+    });
+
+    if (!usuarioExiste) {
+      return res.status(404).json({
+        ok: false,
+        mensaje: 'El usuario no existe.'
+      });
+    }
+
+    const nuevoResultado = await prisma.historialTest.create({
+      data: {
+        userId: Number(userId),
+        resultado: String(resultado).trim()
+      }
+    });
+
+    return res.status(201).json({
+      ok: true,
+      data: nuevoResultado
+    });
+  } catch (error) {
+    console.error('Error guardando resultado del test:', error);
+    return res.status(500).json({
+      ok: false,
+      mensaje: 'No se pudo guardar el resultado del test.',
+      error: error.message
+    });
+  }
+});
+//////////////////////////////
+
+//////////////////////////////
+// Obtener el historial de tests (opcionalmente filtrado por usuario)
 app.get('/api/db/historial-tests', async (req, res) => {
   try {
+    const { userId } = req.query; // ej: /api/db/historial-tests?userId=3
+
     const historial = await prisma.historialTest.findMany({
+      where: userId ? { userId: Number(userId) } : undefined,
       include: {
-        user: true
+        user: {
+          select: {
+            id: true,
+            nombres: true,
+            apellidos: true,
+            correo: true
+            // contrasena NO se incluye — nunca exponer esto
+          }
+        }
       },
       orderBy: {
         fecha: 'desc'
@@ -690,7 +749,6 @@ app.get('/api/db/historial-tests', async (req, res) => {
     });
   } catch (error) {
     console.error('Error obteniendo historial de tests:', error);
-
     return res.status(500).json({
       ok: false,
       mensaje: 'No se pudo obtener el historial de tests.',
@@ -698,6 +756,7 @@ app.get('/api/db/historial-tests', async (req, res) => {
     });
   }
 });
+//////////////////////////////
 //////////////////////////////
 
 //////////////////////////////
@@ -783,3 +842,4 @@ app.use((req, res) => {
 // PARA RENDER MEJOR SERIA ESTO:
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor backend corriendo en el puerto ${PORT}`);
+});
