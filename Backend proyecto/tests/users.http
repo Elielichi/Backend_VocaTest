@@ -23,3 +23,22 @@ GET http://localhost:3000/api/db/universidad-users
 ###
 
 GET http://localhost:3000/api/db/historial-tests
+
+###
+
+@baseurl=https://backend-vocatest.onrender.com
+@tokenAdmin=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbCI6IkFkbWluaXN0cmFkb3IiLCJpYXQiOjE3ODQwODk1MjMsImV4cCI6MTc4NDExODMyM30.CuNoDP2XXPVaXPGFU6qk9C5IRGuTs_-TiAp5MUVZ_3c
+@userId=9
+
+GET {{baseurl}}/api/db/users
+Authorization: Bearer {{tokenAdmin}}
+
+###
+
+GET {{baseurl}}/api/db/users/{{userId}}/historial
+Authorization: Bearer {{tokenAdmin}}
+
+###
+
+GET {{baseurl}}/api/db/users/{{userId}}/favoritos
+Authorization: Bearer {{tokenAdmin}}
