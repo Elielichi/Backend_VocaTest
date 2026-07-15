@@ -3,3 +3,7 @@ node_modules
 .env
 
 /generated/prisma
+/data/local-prisma.db
+/data/local-prisma.db-shm
+/data/local-prisma.db-wal
+/data/local-prisma.db-journal

@@ -96,22 +96,33 @@ authRouter.post(
       throw new HttpError(400, "La edad no es válida.");
     }
 
-    const nuevoUsuario = await prisma.user.create({
-      data: {
-        nombres,
-        apellidos,
-        correo,
-        contrasena: hashPassword(contrasena),
-        rol: registrationRole(req.body.rol),
-        ciudad: cleanOptional(req.body.ciudad) ?? null,
-        tipoColegio: cleanOptional(req.body.tipoColegio) ?? null,
-        telefono: cleanOptional(req.body.telefono) ?? null,
-        edad,
-        sexo: cleanOptional(req.body.sexo) ?? null,
-        carreraRecomendada: cleanOptional(req.body.carreraRecomendada) ?? null,
-        especialidad: cleanOptional(req.body.especialidad) ?? null,
-        gradoAcademico: cleanOptional(req.body.gradoAcademico) ?? null,
-      },
+    const carreraRecomendada = cleanOptional(req.body.carreraRecomendada) ?? null;
+    const nuevoUsuario = await prisma.$transaction(async (tx) => {
+      const usuario = await tx.user.create({
+        data: {
+          nombres,
+          apellidos,
+          correo,
+          contrasena: hashPassword(contrasena),
+          rol: registrationRole(req.body.rol),
+          ciudad: cleanOptional(req.body.ciudad) ?? null,
+          tipoColegio: cleanOptional(req.body.tipoColegio) ?? null,
+          telefono: cleanOptional(req.body.telefono) ?? null,
+          edad,
+          sexo: cleanOptional(req.body.sexo) ?? null,
+          carreraRecomendada,
+          especialidad: cleanOptional(req.body.especialidad) ?? null,
+          gradoAcademico: cleanOptional(req.body.gradoAcademico) ?? null,
+        },
+      });
+
+      if (carreraRecomendada) {
+        await tx.historialTest.create({
+          data: { userId: usuario.id, resultado: carreraRecomendada },
+        });
+      }
+
+      return usuario;
     });
 
     return res.status(201).json({

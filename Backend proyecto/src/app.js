@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 
 import { config } from "./config.js";
-import { prisma } from "./lib/prisma.js";
+import { getDatabaseMode, prisma } from "./lib/prisma.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { salasRouter } from "./routes/salas.routes.js";
 import { testRouter } from "./routes/test.routes.js";
@@ -55,7 +55,11 @@ app.get(
   "/api/health",
   asyncHandler(async (_req, res) => {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ ok: true, servicio: "vocatest-api", database: "connected" });
+    res.json({
+      ok: true,
+      servicio: "vocatest-api",
+      database: getDatabaseMode(),
+    });
   }),
 );
 

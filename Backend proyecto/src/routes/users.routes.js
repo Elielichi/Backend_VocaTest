@@ -263,13 +263,17 @@ usersRouter.post(
       throw new HttpError(400, "El resultado del test no es válido.");
     }
 
-    const entrada = await prisma.historialTest.create({
-      data: { userId, resultado },
-    });
+    const entrada = await prisma.$transaction(async (tx) => {
+      const historial = await tx.historialTest.create({
+        data: { userId, resultado },
+      });
 
-    await prisma.user.update({
-      where: { id: userId },
-      data: { carreraRecomendada: resultado },
+      await tx.user.update({
+        where: { id: userId },
+        data: { carreraRecomendada: resultado },
+      });
+
+      return historial;
     });
 
     return res.status(201).json({ ok: true, data: entrada });

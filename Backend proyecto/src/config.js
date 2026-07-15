@@ -15,6 +15,9 @@ export const config = {
   authSecret: process.env.AUTH_SECRET || defaultAuthSecret,
   frontendOrigins: parseOrigins(process.env.FRONTEND_URL),
   isProduction: process.env.NODE_ENV === "production",
+  localDbFallback:
+    process.env.LOCAL_DB_FALLBACK !== "false" &&
+    process.env.NODE_ENV !== "production",
   useSsl:
     process.env.PGSSL === "true" ||
     /sslmode=require|render\.com/i.test(process.env.DATABASE_URL || ""),

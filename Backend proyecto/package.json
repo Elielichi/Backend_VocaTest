@@ -7,9 +7,12 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "node --test tests/security.test.js",
-    "check": "node --check index.js && node --check src/app.js && node --check src/routes/auth.routes.js && node --check src/routes/users.routes.js && node --check src/routes/universidades.routes.js && node --check src/routes/salas.routes.js && node --check src/routes/test.routes.js",
+    "check": "node --check index.js && node --check src/app.js && node --check src/lib/prisma.js && node --check src/lib/local-prisma.js && node --check src/lib/local-sqlite-store.js && node --check scripts/init-local-database.js && node --check src/routes/auth.routes.js && node --check src/routes/users.routes.js && node --check src/routes/universidades.routes.js && node --check src/routes/salas.routes.js && node --check src/routes/test.routes.js",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
+    "db:local:init": "node scripts/init-local-database.js",
+    "db:studio": "npm run db:local:init && prisma studio --url file:./data/local-prisma.db",
+    "db:studio:render": "prisma studio",
     "db:seed-test": "node seed-vocational.js",
     "postinstall": "prisma generate"
   },

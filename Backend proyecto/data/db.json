@@ -310,7 +310,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 215,
       "descripcion": "Formación jurídica con enfoque en derecho público y privado.",
-      "planEstudios": "/mallas/unmsm-derecho.pdf"
+      "planEstudios": null
     },
     {
       "id": 24,
@@ -370,7 +370,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 210,
       "descripcion": "Optimización industrial y gestión de operaciones.",
-      "planEstudios": "/mallas/unmsm-industrial.pdf"
+      "planEstudios": null
     },
     {
       "id": 30,
@@ -420,7 +420,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 225,
       "descripcion": "Arquitectura, urbanismo y diseño ambiental.",
-      "planEstudios": "/mallas/uni-arquitectura.pdf"
+      "planEstudios": null
     },
     {
       "id": 35,
@@ -480,7 +480,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 205,
       "descripcion": "Economía aplicada a proyectos de ingeniería.",
-      "planEstudios": "/mallas/uni-economica.pdf"
+      "planEstudios": null
     },
     {
       "id": 41,
@@ -500,7 +500,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 195,
       "descripcion": "Diseño digital, UX/UI y comunicación visual.",
-      "planEstudios": "/mallas/upc-diseno.pdf"
+      "planEstudios": "/mallas/upc-diseño.pdf"
     },
     {
       "id": 43,
@@ -590,7 +590,7 @@
       "duracion": "8 ciclos (4 años)",
       "creditos": 185,
       "descripcion": "Arte culinario, gestión gastronómica y cocina internacional.",
-      "planEstudios": "/mallas/usil-gastronomia.pdf"
+      "planEstudios": null
     },
     {
       "id": 52,
@@ -630,7 +630,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 198,
       "descripcion": "Comunicación estratégica y relaciones públicas.",
-      "planEstudios": "/mallas/usil-comunicaciones.pdf"
+      "planEstudios": null
     },
     {
       "id": 56,
@@ -640,7 +640,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 225,
       "descripcion": "Arquitectura con énfasis en diseño sostenible.",
-      "planEstudios": "/mallas/usil-arquitectura.pdf"
+      "planEstudios": null
     },
     {
       "id": 57,
@@ -660,7 +660,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 200,
       "descripcion": "Psicología organizacional y del consumidor.",
-      "planEstudios": "/mallas/usil-psicologia.pdf"
+      "planEstudios": null
     },
     {
       "id": 59,
@@ -920,7 +920,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 205,
       "descripcion": "Economía empresarial y análisis financiero.",
-      "planEstudios": "/mallas/esan-economia.pdf"
+      "planEstudios": null
     },
     {
       "id": 85,
@@ -950,7 +950,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 215,
       "descripcion": "Gestión de operaciones e ingeniería de procesos.",
-      "planEstudios": "/mallas/esan-industrial.pdf"
+      "planEstudios": null
     },
     {
       "id": 88,
@@ -970,7 +970,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 215,
       "descripcion": "Derecho empresarial y regulatorio.",
-      "planEstudios": "/mallas/esan-derecho.pdf"
+      "planEstudios": null
     },
     {
       "id": 90,
@@ -980,7 +980,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 195,
       "descripcion": "Comunicación corporativa y relaciones institucionales.",
-      "planEstudios": "/mallas/esan-comunicacion.pdf"
+      "planEstudios": "/mallas/esan-comunicación.pdf"
     },
     {
       "id": 91,
@@ -990,7 +990,7 @@
       "duracion": "10 ciclos (5 años)",
       "creditos": 215,
       "descripcion": "Derecho civil, penal y empresarial.",
-      "planEstudios": "/mallas/usmp-derecho.pdf"
+      "planEstudios": null
     },
     {
       "id": 92,
